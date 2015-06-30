@@ -4,7 +4,7 @@
   ,"globals": [ "require", "module", "console" ]
   ,"quotmark": "single"
   ,"undef": true
-  ,"unused": true
+  ,"unused": false
   ,"laxcomma": true
   ,"bitwise": true
   ,"eqeqeq": true

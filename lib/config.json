@@ -10,5 +10,5 @@
 	,"ops": [ "ryanguill", "atuttle", "danskaggs" ]
 	,"debug": true
 	,"karmaCooldown": 0
-    ,"maxHistoryPerChannel": 7500
+    ,"maxHistoryPerChannel": 15000
 }
