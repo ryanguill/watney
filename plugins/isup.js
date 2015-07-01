@@ -25,7 +25,7 @@ module.exports = (function(){
 		_bot = bot;
 
     bot.register({
-      pattern: {regex: /\^[^\s-]{4,}$/g},
+      pattern: {regex: /\^[^\s]{4,}$/g},
       f: checkurl,
       type: 'OUT'
     });

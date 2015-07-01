@@ -16,7 +16,7 @@
 		.file({file: getConfigFile()})
 		.defaults({
 			'karmaCooldown': 60
-			,'botName': '```zoidbox'
+			,'botName': 'watney'
 			,'testingChannel': '#bots'
 		});
 

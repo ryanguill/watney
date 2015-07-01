@@ -1,14 +1,14 @@
 {
-	 "slackToken": "xoxb-7012633062-eNYXtX7Zuy5MnfFa0BdhL1G8"
-  	,"ignoreChannels": []
-  	,"autoReconnect" : true
-  	,"autoMark": true
-	,"testingChannel": "#bots"
-	,"redis_port": 6379
-	,"redis_host": ""
-	,"redis_auth_pass": ""
-	,"ops": [ "ryanguill", "atuttle", "danskaggs" ]
-	,"debug": true
-	,"karmaCooldown": 0
-    ,"maxHistoryPerChannel": 15000
+  "slackToken": "xoxb-7012633062-eNYXtX7Zuy5MnfFa0BdhL1G8"
+,"ignoreChannels": []
+,"autoReconnect" : true
+,"autoMark": true
+,"testingChannel": "#bots"
+,"redis_port": 6379
+,"redis_host": ""
+,"redis_auth_pass": ""
+,"ops": [ "ryanguill", "atuttle", "danskaggs" ]
+,"debug": true
+,"karmaCooldown": 0
+,"maxHistoryPerChannel": 15000
 }
