@@ -16,7 +16,6 @@
 		.file({file: getConfigFile()})
 		.defaults({
 			'karmaCooldown': 60
-			,'botName': 'watney'
 			,'testingChannel': '#bots'
 		});
 
@@ -46,6 +45,11 @@
 
 		b.conf = conf;
     b.botName = conf.get('botName');
+
+    if (_.isUndefined(b.botName)) {
+      throw('you must define the botName in the config file!');
+    }
+
 		b.testingChannel = conf.get('testingChannel');
 		b.ignoreChannels = conf.get('ignoreChannels');
 

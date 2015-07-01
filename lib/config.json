@@ -1,5 +1,6 @@
 {
-  "slackToken": "xoxb-7012633062-eNYXtX7Zuy5MnfFa0BdhL1G8"
+  "slackToken": ""
+,"botName": "watney"
 ,"ignoreChannels": []
 ,"autoReconnect" : true
 ,"autoMark": true
