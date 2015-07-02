@@ -118,6 +118,9 @@ module.exports = (function() {
 		term = _.rest(term.split('')).join('').toLowerCase();
 		desc = desc.join(' ');
 
+		//clean up description
+		desc = desc.replace('<','').replace('>','');
+
 		//bot.log('term', term);
 		//bot.log('desc', desc);
 
