@@ -1,0 +1,7 @@
+{
+	"maximumLineLength": 120
+	,"validateIndentation": "\t"
+	,"disallowSpacesInsideParentheses": { "only": [ "{", "}" ] }
+	,"validateParameterSeparator": ", "
+	,"disallowMixedSpacesAndTabs": "smart"
+}
