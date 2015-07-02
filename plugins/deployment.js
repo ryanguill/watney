@@ -53,9 +53,9 @@ module.exports = (function(){
 			if (data === 0) return channel.send('http://i.imgur.com/4C7iu09.gif');
 			channel.send('deploying...');
 
-			child = exec('./extra/deploy.sh', (error, stdout, stderr) => {
-				channel.send('out: ```' + stdout + ' ```');
-				channel.send('err ```' + stderr + ' ```');
+			child = exec('./extra/deploy.sh', (err, stdout, stderr) => {
+				channel.send('stdout: ```' + stdout + ' ```');
+				channel.send('stderr ```' + stderr + ' ```');
 				if (err) return channel.send('error! ' + err);
 			});
 
@@ -77,7 +77,5 @@ module.exports = (function(){
 			type: 'OUT'
 		});
 	};
-
-
 
 })();
