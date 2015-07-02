@@ -1,17 +1,20 @@
-#!/bin/bash
+#these are notes, dont run any of this!
+
 # sudo yum install epel-release -y
 # sudo yum install nodejs npm -y
 # sudo yum install git -y
 # sudo yum install redis -y
 # sudo yum install mlocate -y
 
-git config core.filemode false #ignore permission changes
+#git config core.filemode false #ignore permission changes
 
-chmod +x /opt/watney/extra/deploy.sh
+#chmod +x /opt/watney/extra/deploy.sh
 
-service redis start
-service redis status
-systemctl enable redis.service
+#service redis start
+#service redis status
+#systemctl enable redis.service
+
+# chown -R watney:watney /opt/watney/
 
 # useradd watney
 # groupadd watney
@@ -20,4 +23,4 @@ systemctl enable redis.service
 # systemctl start watney
 # systemctl enable watney
 
-journalctl --unit=docker
+#journalctl --unit=docker
