@@ -23,7 +23,7 @@ module.exports = (function(){
     const filename = channel + '-log.txt';
 
     const formData = {
-      description: 'IRC Log from ' + channel,
+      description: 'Slack Log from ' + channel,
       public: false,
       files: {}
     };

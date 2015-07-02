@@ -4,6 +4,7 @@
   "description": "an even more elegant bot for an even more civilized age",
   "main": "main.js",
   "author": "Adam Tuttle, Ryan Guill",
+  "repository": "https://github.com/ryanguill/watney",
   "license": "MIT",
   "engines": {
     "node": "0.10.x",

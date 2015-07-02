@@ -47,7 +47,7 @@
 		b.botName = conf.get('botName');
 
 		if (_.isUndefined(b.botName)) {
-			throw('you must define the botName in the config file!');
+			throw('you must define the botName in the config file! ' + getConfigFile());
 		}
 
 		b.testingChannel = conf.get('testingChannel');

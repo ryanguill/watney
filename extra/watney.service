@@ -1,0 +1,13 @@
+[Service]
+WorkingDirectory=/opt/watney
+ExecStart=/usr/bin/node /opt/watney/main.js
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=watney
+User=watney
+Group=watney
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
