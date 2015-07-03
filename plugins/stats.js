@@ -35,7 +35,7 @@ module.exports = (function(){
 	}
 
 	function setLastSeen (message, channel, user) {
-		if (!_.isUndefined(user.name)) {
+		if (!_.isUndefined(user)) {
 			redis.hset(bot.botName + '.' + channel.name + '.lastseen', user.name.toLowerCase(), Date.now());
 		}
 	}
