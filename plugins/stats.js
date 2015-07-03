@@ -53,24 +53,26 @@ module.exports = (function(){
 	}
 
 	function countMessage (message, channel, user) {
-		redis.sadd(bot.botName + '.channels', channel.name);
-		//redis.hincrby(bot.botName + '.' + channel.name + '.messageCount', '#' + channel.name, 1);
-		redis.hincrby(bot.botName + '.' + channel.name + '.messageCount', user.name.toLowerCase(), 1);
+		if (!_.isUndefined(user)) {
+			redis.sadd(bot.botName + '.channels', channel.name);
+			//redis.hincrby(bot.botName + '.' + channel.name + '.messageCount', '#' + channel.name, 1);
+			redis.hincrby(bot.botName + '.' + channel.name + '.messageCount', user.name.toLowerCase(), 1);
 
-		getUserMessageCount(channel, user, function(err, data) {
-			if (data !== null && _.isNumber(_.parseInt(data)) && data % 1000 === 0) {
-				var time = '';
-				if (user.name === bot.botName) {
-					time = moment().millisecond(5 * data).fromNow(true);
-					channel.send('Congrats ' + user.name + '! Your ' + data + 'th message was: `' + message.text +
-						'` ~ guessing an average of 5 milliseconds per message, that`s about ' + time + ' spent in IRC!');
-				} else {
-					time = moment().seconds(5 * data).fromNow(true);
-					channel.send('Congrats ' + user.name + '! Your ' + data + 'th message was: `' + message.text +
-						'` ~ guessing an average of 5 seconds per message, that`s about ' + time + ' spent in IRC!');
+			getUserMessageCount(channel, user, function (err, data) {
+				if (data !== null && _.isNumber(_.parseInt(data)) && data % 1000 === 0) {
+					var time = '';
+					if (user.name === bot.botName) {
+						time = moment().millisecond(5 * data).fromNow(true);
+						channel.send('Congrats ' + user.name + '! Your ' + data + 'th message was: `' + message.text +
+							'` ~ guessing an average of 5 milliseconds per message, that`s about ' + time + ' spent in IRC!');
+					} else {
+						time = moment().seconds(5 * data).fromNow(true);
+						channel.send('Congrats ' + user.name + '! Your ' + data + 'th message was: `' + message.text +
+							'` ~ guessing an average of 5 seconds per message, that`s about ' + time + ' spent in IRC!');
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 	function showStats (message, channel, user) {

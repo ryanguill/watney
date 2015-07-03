@@ -132,7 +132,7 @@ module.exports = (function(){
 	}
 
 	function addKarmaPlusPlus (message, channel, user) {
-		let username = _.first(message.text.replace(/\+\+/g, '').trim().split(' '));
+		let username = _.first(message.text.replace(/[:,]?\s*\+\+/g, '').trim().split(' '));
 
 		addKarma(message, channel, user, username);
 	}
@@ -277,7 +277,7 @@ module.exports = (function(){
 		});
 
 		bot.register({
-			pattern: {regex: /.{2,21}[:,]?\s*\+1/g},
+			pattern: {regex: /^.{2,21}[:,]?\s*\+1\s*/g},
 			f: addKarmaSucceeding,
 			type: 'OUT'
 		});
@@ -289,7 +289,7 @@ module.exports = (function(){
 		});
 
 		bot.register({
-			pattern: {regex: /^.{3,21}\+\+/g},
+			pattern: {regex: /^.{3,21}[:,]?\s*\+\+/g},
 			f: addKarmaPlusPlus,
 			type: 'OUT'
 		});
