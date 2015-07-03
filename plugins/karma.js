@@ -120,7 +120,7 @@ module.exports = (function(){
 	}
 
 	function addKarmaSucceeding (message, channel, user) {
-		let username = message.text.replace(/[:,]\s*\+1/g, '').trim();
+		let username = message.text.replace(/[:,]?\s*\+1/g, '').trim();
 
 		addKarma(message, channel, user, username);
 	}
@@ -277,7 +277,7 @@ module.exports = (function(){
 		});
 
 		bot.register({
-			pattern: {regex: /[:,]\s*\+1/g},
+			pattern: {regex: /.{2,21}[:,]?\s*\+1/g},
 			f: addKarmaSucceeding,
 			type: 'OUT'
 		});
