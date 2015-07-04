@@ -144,12 +144,10 @@ module.exports = (function(){
 		bot.countMessage = countMessage;
 
 		_.delay(function() {
-			_.each(bot.channelList, (channelName) => {
-				getMaxUsers((err, data) => {
-					if (err) return console.error(err);
-					//console.log('maxusers', data);
-					maxUsers = data;
-				});
+			getMaxUsers((err, data) => {
+				if (err) return console.error(err);
+				//console.log('maxusers', data);
+				maxUsers = data;
 			});
 		}, 2000);
 
