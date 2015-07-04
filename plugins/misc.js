@@ -38,7 +38,11 @@ module.exports = (function(){
 	function give8BallResponseUserCheck (message, channel, user) {
 		let [mentionedUser] = message.parts;
 
-		if (bot.id === bot.getUserForMention(mentionedUser).id) {
+		mentionedUser = _.first(mentionedUser.split('>')).trim();
+
+		mentionedUser = bot.getUserForMention(mentionedUser);
+
+		if (!_.isUndefined(mentionedUser) && bot.id === mentionedUser.id) {
 			give8BallResponse(message, channel, user);
 		}
 	}
