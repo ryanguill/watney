@@ -148,17 +148,17 @@ For the eventType `presenceChange`, your function should use the signature: `fun
 
 Here are some other documentation points I hope to expand on in the future, but you can at least know they exist and can maybe look up how they work for yourself:
 
-`bot.botName` the username of the bot
-`bot.id` the slack id of the bot
-`bot.self` the slack user object of the bot
-`bot.redis` the redis connection
-`bot.startTime` the timestamp of when the instance started running
-`bot.setCooldown(key, timeoutInSeconds)` key can be an array of keys
-`bot.isOnCooldown(key, callback)` key can be an array of keys ~ callback should be (err, data)
-`bot.isChannelPaused(channel)` the channel object, not the channel name
-`bot.ops.isOp(user, callback)` the user object, not the user name ~ callback should be (err, data) ~ data = 1 for is an op
-`bot.makeMention(user)` takes a user object and returns a string which will make the output a mention of that user
-`bot.getUserForMention(input)` takes a mention like `<@Uxxxxxx>` and gives you a user object
-`bot.getChannelGroupOrDMByID(input)` takes an id and gives you the channel object -
-`bot.getUserByID(id)` takes a user id, gives a user object
-`bot.getUserByName(name)` takes the username string, gives a user object
+- `bot.botName` the username of the bot
+- `bot.id` the slack id of the bot
+- `bot.self` the slack user object of the bot
+- `bot.redis` the redis connection
+- `bot.startTime` the timestamp of when the instance started running
+- `bot.setCooldown(key, timeoutInSeconds)` key can be an array of keys
+- `bot.isOnCooldown(key, callback)` key can be an array of keys ~ callback should be (err, data)
+- `bot.isChannelPaused(channel)` the channel object, not the channel name
+- `bot.ops.isOp(user, callback)` the user object, not the user name ~ callback should be (err, data) ~ data = 1 for is an op
+- `bot.makeMention(user)` takes a user object and returns a string which will make the output a mention of that user
+- `bot.getUserForMention(input)` takes a mention like `<@Uxxxxxx>` and gives you a user object
+- `bot.getChannelGroupOrDMByID(input)` takes an id and gives you the channel object -
+- `bot.getUserByID(id)` takes a user id, gives a user object
+- `bot.getUserByName(name)` takes the username string, gives a user object
