@@ -79,7 +79,9 @@ module.exports = (function() {
 
 	function doLookup (message, channel) {
 		let term = _.rest(message.text.split('')).join('').toLowerCase();
-		bot.log('term', term);
+		//bot.log('term', term);
+
+		if (term.length === 0) return;
 
 		loghit(channel.name, term);
 		getDesc(term, (err, result) => {
