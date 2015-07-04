@@ -71,7 +71,7 @@ module.exports = (function(){
 		});
 
 		bot.register({
-			pattern: {regex: new RegExp('^<@U.{8}>[\s]*.*\?')},
+			pattern: {regex: /^<@U.{8}>[\s]*.*\?/},
 			f: give8BallResponseUserCheck,
 			type: 'OUT'
 		});

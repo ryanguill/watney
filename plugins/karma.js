@@ -67,8 +67,6 @@ module.exports = (function(){
 			return o;
 		});
 
-		console.log(uniqueScores, sumByReceiver);
-
 		return sumByReceiver;
 	}
 
@@ -86,8 +84,6 @@ module.exports = (function(){
 			o.place = uniqueScores.findIndex(x => x === o.value) + 1;
 			return o;
 		});
-
-		console.log(uniqueScores, sumByGiver);
 
 		return sumByGiver;
 	}
