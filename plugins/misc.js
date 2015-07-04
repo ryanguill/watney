@@ -51,8 +51,57 @@ module.exports = (function(){
 		channel.send('It is currently ' + moment().utc().format('YYYY-MM-DD HH:mm [UTC]'));
 	}
 
+	function sendHelp (message, channel, user) {
+		let [command, helpUser] = message.parts;
+
+		if (!_.isUndefined(helpUser)) {
+			helpUser = _.first(helpUser.split('>')).trim() + '>';
+			helpUser = bot.getUserForMention(helpUser);
+		} else {
+			helpUser = user;
+		}
+
+		function doSend (helpUser) {
+			let dm = bot.getDMByName(helpUser.name);
+			bot.setCooldown(['help-from.' + user.name, 'help-to.' + helpUser.name], 5 * 60);
+			dm.send('Hi! My name is ' + bot.makeMention(bot.self) + ', an open source slack bot.\n' +
+				'Here is some documentation of what I can do for you: https://github.com/ryanguill/watney/blob/master/help.md' +
+				'\n You can chat to me in any channel that I am a part of, including this DM.\nYou can also use /invite ' +
+				bot.makeMention(bot.self) + ' to add me to any room I am not currently participating in.\n\n' +
+				'I am an open source project and pull requests, bug reports and feature ideas are welcome! Or you can fork ' +
+				'and use me in your own slack rooms.  https://github.com/ryanguill/watney'
+			);
+
+			bot.ops.isOp(helpUser.name, (err, data) => {
+				if (err) return channel.send('error! ' + err);
+				if (data === 1) dm.send('OP help commands: https://github.com/ryanguill/watney/blob/master/ops-help.md');
+			});
+		}
+
+		bot.isOnCooldown(['help-from.' + user.name, 'help-to.' + helpUser.name], (err, data) => {
+			if (err) return channel.send('error! ', err);
+			if (!data) {
+				let dm = bot.getDMByName(helpUser.name);
+				if (_.isUndefined(dm)) {
+					dm = bot.openDM(helpUser.id, (args) => {
+						_.delay(() => doSend(helpUser), 1000);
+					});
+				} else {
+					return doSend(helpUser);
+				}
+			} else {
+				channel.send('Maybe I can`t give you the help you need... (you can only use !help once every 5 minutes');
+			}
+		});
+	}
+
 	return function init (_bot) {
 		bot = _bot;
+
+		bot.register({
+			pattern: {command: '!help'},
+			f: sendHelp,
+			type: 'OUT'});
 
 		bot.register({
 			pattern: {command: '!time'},
