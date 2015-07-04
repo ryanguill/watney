@@ -1,15 +1,14 @@
 # watney
 Watney, the bot for slack
 
-more information coming soon!
-
 # user documentation
 See [help](https://github.com/ryanguill/watney/blob/master/help.md) and [ops-help](https://github.com/ryanguill/watney/blob/master/ops-help.md)
 
-# es6
+# developer documentation
+See [dev-help](https://github.com/ryanguill/watney/blob/master/dev-help.md)
 
-We are using babel - any require of local files (doesn't include node_module dependencies) are assumed to be es6 - You should be able to write es5 code if you like, but step debugging may be affected.  `bot.log()` is the easiest way for now.
-
+# contributing guidelines
+Coming soon!
 
 # The MIT License (MIT)
 
