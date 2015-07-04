@@ -189,19 +189,19 @@ module.exports = (function(){
 			f: logMessage,
 			type: 'IN'});
 
-		bot.register({pattern: {regex: new RegExp('!tail !len$')},
+		bot.register({pattern: {regex: new RegExp('!tail -len$')},
 			f: tailLen,
 			type: 'OUT',
 			flags: {stop: true}
 		});
 
-		bot.register({pattern: {regex: new RegExp('!tail !len .*')},
+		bot.register({pattern: {regex: new RegExp('!tail -len .*')},
 			f: tailLenChannel,
 			type: 'OUT',
 			flags: {stop: true}
 		});
 
-		bot.register({pattern: {regex: new RegExp('!tail !max$')},
+		bot.register({pattern: {regex: new RegExp('!tail -max$')},
 			f: tailMax,
 			type: 'OUT',
 			flags: {stop: true}
