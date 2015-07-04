@@ -77,6 +77,7 @@
 				});
 
 			b.botName = b.self.name;
+			b.id = b.self.id;
 
 			console.log('Welcome to Slack. You are ' + b.self.name + ' of ' + b.team.name);
 
