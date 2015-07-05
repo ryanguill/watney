@@ -22,10 +22,10 @@ module.exports = (function(){
 
 	function diceCalculation (result, operator, modifier) {
 		let operators = {
-			'+': function(a, b) { return a + b; },
-			'-': function(a, b) { return a - b; },
-			'/': function(a, b) { return a / b; },
-			'*': function(a, b) { return a * b; }
+			'+': (a,b) => a+b,
+			'-': (a,b) => a-b,
+			'/': (a,b) => a/b,
+			'*': (a,b) => a*b
 		};
 
 		return operators[operator](parseFloat(result), parseFloat(modifier));
@@ -51,10 +51,7 @@ module.exports = (function(){
 		bot.register({
 			pattern: {regex: reDice},
 			f: procDice,
-			type: 'OUT',
-			eventType: 'message',
-			priority: 900,
-			flags: { stop:true }
+			type: 'OUT'
 		});
 	};
 })();
