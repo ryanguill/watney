@@ -7,10 +7,10 @@ module.exports = (function(){
 
 	function rollDice (dice) {
 		let result = 0,
-			aDice = dice.split('d'),
+			[throws, sides] = dice.split('d'),
 			aResults = [];
-		for (let i = 0; i < aDice[0]; i++){
-			let roll = Math.floor((Math.random() * aDice[1]) + 1);
+		for (let i = 0; i < throws; i++){
+			let roll = Math.floor((Math.random() * sides) + 1);
 			result = result + roll;
 			aResults.push(roll);
 		}
@@ -37,9 +37,9 @@ module.exports = (function(){
 			returnMessage = bot.makeMention(user) + ': You rolled:';
 
 		for (let element of aDiceRolls) {
-			let aBits = element.split(/(\+|-|\*|\/)/g),
-				roll = rollDice(aBits[0]);
-			if (aBits.length === 3) roll.result = diceCalculation(roll.result, aBits[1], aBits[2]);
+			let [die, operator, modifier] = element.split(/(\+|-|\*|\/)/g),
+				roll = rollDice(die);
+			if (aBits.length === 3) roll.result = diceCalculation(roll.result, operator, modifier);
 			returnMessage = returnMessage + ' ' + element + ' = ' + roll.result + ' [' + roll.rolls.toString() + ']';
 		}
 		channel.send(returnMessage);
