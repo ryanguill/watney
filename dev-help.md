@@ -35,7 +35,7 @@ There are really only a few things to know about how to write a new plugin.  The
 
 All plugins should use this basic template:
 
-```
+```javascript
 //requires here
 const _ = require('lodash'); //for example
 
@@ -80,7 +80,7 @@ You can use multiple pattern registrations pointing to the same function if you 
 
 To register your plugins interest in a pattern, call `bot.register` and pass an object with the following keys. If you want to pass the default value for a key, you can omit that key entirely.
 
-```
+```javascript
 {
 	pattern: {},  //required, see more information below
 	f: functionName, //required, a reference to the function that you want called when a message comes through that matches this pattern
