@@ -12,7 +12,7 @@ Getting started should be as simple as:
 - Clone your fork locally
 - use `npm install` to install the dependencies
 - copy `lib/config.json` to `lib/config.user.json`
-- Note: if you want to develop in the cfml slack room, contact an admin for an api key and you can skip these next steps
+- Note: if you want to develop in the cfml slack room, contact an admin for an api key and you can skip these next steps.  It is easy to set up your own personal slack room though if you think you will be testing frequently.
   - go to the slack room that you want to integrate with, 'Configure Integrations' 
   - search for 'bots' and add that integration
   - come up with a username for your bot and get an api key
@@ -20,6 +20,18 @@ Getting started should be as simple as:
 - run `node main.js` to connect and test!
 
 That may have seemed complicated, but really shouldn't more than a few minutes.
+
+## Style and Quality
+
+Try and match style of the plugin you are in - if you are the one writing the plugin, feel free to use your own style - within the style guidelines set up.
+
+We use JSCS and JSHint.  Please make sure you run your code through these tools before submitting a PR.
+
+### IntelliJ
+
+If you are using intellij, JSCS and JSHint support is built in.  For JSCS you still have to download the JSCS npm module first and point to it.  Use the supplied rc files though for your configuration.
+
+You also want to change your Javascript Language Version to ECMAScript 6.
 
 # Notes
 
