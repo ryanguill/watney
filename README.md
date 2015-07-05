@@ -1,16 +1,16 @@
 # watney
 Watney, the bot for slack
 
-# user documentation
+### user documentation
 See [help](https://github.com/ryanguill/watney/blob/master/help.md) and [ops-help](https://github.com/ryanguill/watney/blob/master/ops-help.md)
 
-# developer documentation
+### developer documentation
 See [dev-help](https://github.com/ryanguill/watney/blob/master/dev-help.md)
 
-# contributing guidelines
+### contributing guidelines
 Coming soon!
 
-# The MIT License (MIT)
+### The MIT License (MIT)
 
 Copyright (c) 2015 Ryan Guill, Adam Tuttle
 

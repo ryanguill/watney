@@ -13,9 +13,9 @@ Getting started should be as simple as:
 - use `npm install` to install the dependencies
 - copy `lib/config.json` to `lib/config.user.json`
 - Note: if you want to develop in the cfml slack room, contact an admin for an api key and you can skip these next steps
-- - go to the slack room that you want to integrate with, 'Configure Integrations' 
-- - search for 'bots' and add that integration
-- - come up with a username for your bot and get an api key
+  - go to the slack room that you want to integrate with, 'Configure Integrations' 
+  - search for 'bots' and add that integration
+  - come up with a username for your bot and get an api key
 - update `lib.config.user.json` with appropriate values, your api key and your bot's username especially. You probably want to ignore the #general room - you cannot remove your bot from that room and probably don't want to spam it while you develop.
 - run `node main.js` to connect and test!
 
@@ -31,20 +31,36 @@ The only sticking point about transpiling from ES6 is that debugging can be diff
 
 # Plugin API
 
-There are really on a few things to know about how to write a new plugin.  The first is how to register your interest in different events.
+There are really only a few things to know about how to write a new plugin.  The first is how to register your interest in different events.
 
 All plugins should use this basic template:
 
 ```
+//requires here
+const _ = require('lodash'); //for example
+
 module.exports = (function(){
 	
 	let bot;
 	
+	//your functions here
+	
+	function doSomethingCool (message, channel, user) {
+		//
+	}
+	
 	return function init (_bot) {
 		bot = _bot;
 			
-		bot.register(
-			//pattern
+		//any startup steps here	
+			
+		bot.register({ //pattern
+			pattern: {},
+			f: doSomethingCool,
+			type: 'OUT',
+			eventType: 'message',
+			priority: 1000,
+			flags: {}			
 		});
 		
 		//more pattern registrations
@@ -52,7 +68,7 @@ module.exports = (function(){
 })();
 ```
 
-the `bot` parameter passed to the `init` method contains many helpful resources and functions that will be documented more as time goes on.  One of the big ones is `bot.redis` which can be used to persist data.  Look at the ops plugin for a relatively simple example of how to use redis, although a lot of plugins use it so look around if you need more examples.
+The `bot` parameter passed to the `init` method contains many helpful resources and functions that will be documented more as time goes on.  One of the big ones is `bot.redis` which can be used to persist data.  Look at the ops plugin for a relatively simple example of how to use redis, although a lot of plugins use it so look around if you need more examples.
 
 ## Pattern registration
 
@@ -79,7 +95,7 @@ To register your plugins interest in a pattern, call `bot.register` and pass an 
 
 Currently, pattern objects can use the following keys, which can be combined.  Pattern matching works on exclusion, patterns are considered matched until they encounter a rule that fails.
 
-An empty pattern object matches everything `{}`.
+An empty pattern object `{}` matches everything.
 
 You can use the `startsWith` pattern to match any message that starts with the string, for example: `{startsWith: '%'}` would match any trimmed string that starts with a `%` character.
 
