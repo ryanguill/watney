@@ -3,8 +3,8 @@ const _ = require('lodash');
 module.exports = (function(){
 
 	let bot,
-		reDice = new RegExp(/([1-9][0-9]{0,2})(d|D)([1-9][0-9]{0,3})((\+|-|\*|\/)([0-9]{1,3}))?/g),
-		reMessage = new RegExp(/(^(\!roll )[1-9][0-9]{0,2})(d|D)([1-9][0-9]{0,3})((\+|-|\*|\/)([0-9]{1,3}))?/g);
+		reDice = /([1-9][0-9]{0,2})(d|D)([1-9][0-9]{0,3})((\+|-|\*|\/)([0-9]{1,3}))?/g,
+		reMessage = /(^(\!roll )[1-9][0-9]{0,2})(d|D)([1-9][0-9]{0,3})((\+|-|\*|\/)([0-9]{1,3}))?/g;
 
 	function rollDice (dice) {
 		let result = 0,
