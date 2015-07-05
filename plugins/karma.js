@@ -116,7 +116,7 @@ module.exports = (function(){
 	}
 
 	function addKarmaSucceeding (message, channel, user) {
-		let username = message.text.replace(/[:,]?\s*\+1/g, '').trim();
+		let username = _.first(message.parts).replace(/[:,\s+]/g, '').trim();
 
 		addKarma(message, channel, user, username);
 	}
@@ -192,7 +192,8 @@ module.exports = (function(){
 			return channel.send(bot.makeMention(slackUser) + ' hasn`t given any karma yet!');
 		}
 
-		channel.send(bot.makeMention(slackUser) + ' has given ' + userKarma.value + ' karma. #' + userKarma.place + ' overall.');
+		channel.send(bot.makeMention(slackUser) + ' has given ' + userKarma.value + ' karma. #' +
+			userKarma.place + ' overall.');
 	}
 
 	function banUser (message, channel, user) {
@@ -273,7 +274,7 @@ module.exports = (function(){
 		});
 
 		bot.register({
-			pattern: {regex: /^.{2,21}[:,]?\s*\+1\s*/g},
+			pattern: {regex: /^[A-Za-z0-9<>@]{2,21}[:,]?\s*\+1[^:]*\s*.*/g},
 			f: addKarmaSucceeding,
 			type: 'OUT'
 		});
