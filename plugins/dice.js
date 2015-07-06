@@ -60,14 +60,6 @@ module.exports = (function(){
 			let [diePart, quantifier, target] = element.split(/(&[g|G|l|L]t;)/g),
 				[die, operator, modifier] = diePart.split(/(\+|-|\*|\/)/g),
 				roll = rollDice(die);
-			console.log({
-				diepart: diePart,
-				quantifier: quantifier,
-				target: target,
-				die: die,
-				operator: operator,
-				modifier: modifier
-			});
 			if (operator) roll.result = diceCalculation(roll.result, operator, modifier);
 			if (quantifier && target) roll.target = checkTarget(roll.result, quantifier, target);
 			roll.target = roll.target || '';
