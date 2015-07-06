@@ -3,8 +3,28 @@ const _ = require('lodash');
 module.exports = (function(){
 
 	let bot,
-		reDice = /([1-9][0-9]{0,2})(d|D)([1-9][0-9]{0,3})((\+|-|\*|\/)([0-9]{1,3}))?/g,
+		reDice = /([1-9][0-9]{0,2})(d|D)([1-9][0-9]{0,3})((\+|-|\*|\/)([0-9]{1,3}))?( *\&(g|G|l|L)t\; *[0-9]*)?/g,
 		reMessage = /(^(\!roll )[1-9][0-9]{0,2})(d|D)([1-9][0-9]{0,3})((\+|-|\*|\/)([0-9]{1,3}))?/g;
+
+	function checkTarget(result, quantifier, target) {
+		let text = '';
+		if (quantifier === '&gt;') {
+			if (result > target) {
+				text = ' Success! ' + result + ' is higher than ' + target;
+			} else {
+				text = ' Failure! ' + result + ' is lower than ' + target;
+			}
+		} else if (quantifier === '&lt;') {
+			if (result < target) {
+				text = ' Success! ' + result + ' is lower than ' + target;
+			} else {
+				text = ' Failure! ' + result + ' is higher than ' + target;
+			}
+		} else {
+			text = ' We just dont know!';
+		}
+		return text;
+	}
 
 	function rollDice (dice) {
 		let result = 0,
@@ -36,12 +56,23 @@ module.exports = (function(){
 		let aDiceRolls = message.text.match(reDice),
 			aResults = [],
 			returnMessage = bot.makeMention(user) + ': You rolled:';
-
 		for (let element of aDiceRolls) {
-			let [die, operator, modifier] = element.split(/(\+|-|\*|\/)/g),
+			let [diePart, quantifier, target] = element.split(/(&[g|G|l|L]t;)/g),
+				[die, operator, modifier] = diePart.split(/(\+|-|\*|\/)/g),
 				roll = rollDice(die);
+			console.log({
+				diepart: diePart,
+				quantifier: quantifier,
+				target: target,
+				die: die,
+				operator: operator,
+				modifier: modifier
+			});
 			if (operator) roll.result = diceCalculation(roll.result, operator, modifier);
-			returnMessage = returnMessage + ' ' + element + ' = ' + roll.result + ' [' + roll.rolls.toString() + ']';
+			if (quantifier && target) roll.target = checkTarget(roll.result, quantifier, target);
+			roll.target = roll.target || '';
+			returnMessage = returnMessage + ' ' + element + ' = ' + roll.result + ' [' + roll.rolls.toString() +
+				']' + roll.target;
 		}
 		channel.send(returnMessage);
 	}
