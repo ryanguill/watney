@@ -117,20 +117,30 @@ module.exports = (function(){
 	function highWaterMarkCheck (user, presence) {
 
 		let activeUsers = _.filter(bot.users, {presence: 'active'}).length;
-		//console.log('highWaterMarkCheck', user.name, presence, activeUsers, maxUsers);
-		if (_.isUndefined(maxUsers) || activeUsers > maxUsers) {
-			maxUsers = activeUsers;
+		/*
+		console.log('highWaterMarkCheck', activeUsers, maxUsers, _.keys(bot.users).length);
+		console.log(_.map(_.filter(bot.users, {presence: 'active'}),
+			u => {return {name: u.name, real_name: u.real_name};}));
+		*/
+		if (_.isUndefined(maxUsers) || activeUsers > maxUsers.maxUsersCount) {
+			maxUsers.maxUsersCount = activeUsers;
+			maxUsers.dte = _.now();
+
 			setMaxUsers(activeUsers);
 		}
 	}
 
 	function displayMaxUsers (message, channel, user) {
+
+		let activeUsers = _.filter(bot.users, {presence: 'active'}).length;
+
 		getMaxUsers(function (err, data) {
 			if (err) return channel.send('error! ' + err);
 			if (!_.isNull(data)) {
 				data = JSON.parse(data);
 				return channel.send('The most members I have seen online was ' + data.maxUserCount + ' on ' +
-					moment(data.dte).format('MMMM Do YYYY, HH:mm:ss Z'));
+					moment(data.dte).format('MMMM Do YYYY, HH:mm:ss Z') + '\nThere are currently ' + activeUsers +
+					' active users' + ' online');
 			} else {
 				return channel.send('I`m not sure yet, give me a few minutes and ask again.');
 			}
@@ -147,7 +157,7 @@ module.exports = (function(){
 			getMaxUsers((err, data) => {
 				if (err) return console.error(err);
 				//console.log('maxusers', data);
-				maxUsers = data;
+				maxUsers = JSON.parse(data);
 			});
 		}, 2000);
 
