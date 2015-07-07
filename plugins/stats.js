@@ -122,7 +122,7 @@ module.exports = (function(){
 		console.log(_.map(_.filter(bot.users, {presence: 'active'}),
 			u => {return {name: u.name, real_name: u.real_name};}));
 		*/
-		if (!_.isUndefined(maxUsers) || activeUsers > maxUsers.maxUsersCount) {
+		if (!_.isUndefined(maxUsers) && activeUsers > maxUsers.maxUsersCount) {
 			maxUsers.maxUsersCount = activeUsers;
 			maxUsers.dte = _.now();
 

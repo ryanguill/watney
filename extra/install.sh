@@ -23,4 +23,6 @@
 # systemctl start watney
 # systemctl enable watney
 
-#journalctl --unit=docker
+# chown -R watney:watney /opt/watney
+
+#journalctl --unit=watney
