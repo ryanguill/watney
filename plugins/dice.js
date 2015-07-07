@@ -7,7 +7,7 @@ module.exports = (function(){
 		reMessage = /(^(!roll )[1-9][0-9]{0,2})(d|D)([1-9][0-9]{0,3})((\+|-|\*|\/)([0-9]{1,3}))?/g;
 
 	function checkTarget(result, quantifier, target) {
-		let text = ' Failure!',
+		let text = ' `Failure!`',
 			quantifiers = {
 				'&gt;': (a,b) => a>b,
 				'&lt;': (a,b) => a<b,
@@ -15,7 +15,7 @@ module.exports = (function(){
 				'&lt;=': (a,b) => a<=b,
 				'=': (a,b) => a===b
 			};
-		if (quantifiers[quantifier.toLowerCase()](parseFloat(result), parseFloat(target))) text = ' Success!';
+		if (quantifiers[quantifier.toLowerCase()](parseFloat(result), parseFloat(target))) text = ' `Success!`';
 		return text;
 	}
 
@@ -26,6 +26,8 @@ module.exports = (function(){
 		for (let i = 0; i < throws; i++){
 			let roll = Math.floor((Math.random() * sides) + 1);
 			result += roll;
+			if (roll === 1) roll = '`' + roll + '`';
+			if (roll === parseFloat(sides)) roll = '`' + roll + '`';
 			aResults.push(roll);
 		}
 		return {
@@ -47,10 +49,7 @@ module.exports = (function(){
 
 	function procDice (message, channel, user) {
 		let aDiceRolls = message.text.match(reDice),
-			aResults = [],
-			returnMessage = bot.makeMention(user) + ': You rolled:',
-			seperator = '`';
-		if (aDiceRolls.length > 4) seperator = '```';
+			returnMessage = bot.makeMention(user) + ': You rolled:';
 		for (let element of aDiceRolls) {
 			let [diePart, quantifier, target] = element.split(/(&[g|l]t;=*|=)/g),
 				[die, operator, modifier] = diePart.split(/(\+|-|\*|\/)/g),
@@ -58,8 +57,8 @@ module.exports = (function(){
 			if (operator) roll.result = diceCalculation(roll.result, operator, modifier);
 			roll.target = '';
 			if (quantifier && target) roll.target = checkTarget(roll.result, quantifier, target);
-			returnMessage += seperator + '( ' + element + ' ) = ' + roll.result + ' [' + roll.rolls.toString() +
-				']' + roll.target + seperator + ' ';
+			returnMessage += '( ' + element + ' ) = `' + roll.result + '` [' + roll.rolls.toString() +
+				']' + roll.target + ' ';
 		}
 		channel.send(returnMessage);
 	}
