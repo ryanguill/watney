@@ -36,7 +36,7 @@ module.exports = (function() {
 
 		request.post({
 			url: 'https://api.github.com/gists',
-			headers: {'user-agent': 'https://github.com/atuttle/zoidbox'},
+			headers: {'user-agent': 'https://github.com/ryanguill/watney'},
 			form: JSON.stringify(formData)}, callback);
 	}
 

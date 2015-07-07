@@ -14,6 +14,15 @@ module.exports = (function(){
 		data = _.map(data, function(line) {
 			try {
 				line = JSON.parse(line);
+				line.text = line.text.split(' ').map(part => {
+					if (part.indexOf('<@U') !== -1) {
+						let user = bot.getUserForMention(part);
+						user = user || {name: ''};
+						return '@' + user.name;
+					}
+					return part;
+				}).join(' ');
+
 				return moment(line.time).format('YYYY-MM-DDTHH:mm:ss[Z]') + ' @' + line.user + ' ' + line.text;
 			} catch (e) {
 				console.error(e);
@@ -30,10 +39,12 @@ module.exports = (function(){
 
 		formData.files[filename] = {content: data.reverse().join('\n')};
 
+		console.log(JSON.stringify(formData));
+
 		request({
 			method: 'POST',
 			url: 'https://api.github.com/gists',
-			headers: {'user-agent': 'https://github.com/atuttle/zoidbox'},
+			headers: {'user-agent': 'https://github.com/ryanguill/watney'},
 			form: JSON.stringify(formData)}, callback);
 	}
 
@@ -42,11 +53,22 @@ module.exports = (function(){
 	}
 
 	function logMessage (message, channel, user) {
+		message.parts = message.parts || [];
+
+		let text = message.parts.map(part => {
+			if (part.indexOf('<@U') !== -1) {
+				let user = bot.getUserForMention(part);
+				user = user || {name: ''};
+				return '@' + user.name;
+			}
+			return part;
+		}).join(' ');
+
 		user = user || {};
 		const data = {
 			userID: user.id,
 			user: user.name,
-			text: message.text,
+			text: text,
 			time: _.now()
 		};
 		redis.lpush('channel_log.' + channel.name.toLowerCase(), JSON.stringify(data));
