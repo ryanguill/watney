@@ -48,7 +48,9 @@ module.exports = (function(){
 	function procDice (message, channel, user) {
 		let aDiceRolls = message.text.match(reDice),
 			aResults = [],
-			returnMessage = bot.makeMention(user) + ': You rolled:';
+			returnMessage = bot.makeMention(user) + ': You rolled:',
+			seperator = '`';
+		if (aDiceRolls.length > 4) seperator = '```';
 		for (let element of aDiceRolls) {
 			let [diePart, quantifier, target] = element.split(/(&[g|l]t;=*|=)/g),
 				[die, operator, modifier] = diePart.split(/(\+|-|\*|\/)/g),
@@ -56,8 +58,8 @@ module.exports = (function(){
 			if (operator) roll.result = diceCalculation(roll.result, operator, modifier);
 			roll.target = '';
 			if (quantifier && target) roll.target = checkTarget(roll.result, quantifier, target);
-			returnMessage += ' ( ' + element + ' ) = ' + roll.result + ' [' + roll.rolls.toString() +
-				']' + roll.target;
+			returnMessage += seperator + '( ' + element + ' ) = ' + roll.result + ' [' + roll.rolls.toString() +
+				']' + roll.target + seperator + ' ';
 		}
 		channel.send(returnMessage);
 	}
