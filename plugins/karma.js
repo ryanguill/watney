@@ -118,17 +118,32 @@ module.exports = (function(){
 	function addKarmaSucceeding (message, channel, user) {
 		let username = _.first(message.parts).replace(/[:,\s+]/g, '').trim();
 
+		channel.is_im = channel.is_im || false;
+		if (channel.is_im) {
+			return channel.send("You can not give karma in Direct Messages");
+		}
+
 		addKarma(message, channel, user, username);
 	}
 
 	function addKarmaPreceding (message, channel, user) {
 		let username = _.first(message.text.replace(/\+1[:,]*/g, '').trim().split(' '));
 
+		channel.is_im = channel.is_im || false;
+		if (channel.is_im) {
+			return channel.send("You can not give karma in Direct Messages");
+		}
+
 		addKarma(message, channel, user, username);
 	}
 
 	function addKarmaPlusPlus (message, channel, user) {
 		let username = _.first(message.text.replace(/[:,]?\s*\+\+/g, '').trim().split(' '));
+
+		channel.is_im = channel.is_im || false;
+		if (channel.is_im) {
+			return channel.send("You can not give karma in Direct Messages");
+		}
 
 		addKarma(message, channel, user, username);
 	}
