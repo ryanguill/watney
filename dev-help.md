@@ -1,6 +1,6 @@
 # Development Help
 
-So you want to contribute to watney? Or maybe fork it and use in your own slack room with your own integrations? Here is a few topics that will help.  
+So you want to contribute to watney? Or maybe fork it and use in your own slack room with your own integrations? Here are a few topics that will help.
 
 Definitely read these things if you plan on contributing back to Watney itself.
 
@@ -13,10 +13,10 @@ Getting started should be as simple as:
 - use `npm install` to install the dependencies
 - copy `lib/config.json` to `lib/config.user.json`
 - Note: if you want to develop in the cfml slack room, contact an admin for an api key and you can skip these next steps.  It is easy to set up your own personal slack room though if you think you will be testing frequently.
-  - go to the slack room that you want to integrate with, 'Configure Integrations' 
+  - go to the slack room that you want to integrate with, 'Configure Integrations'
   - search for 'bots' and add that integration
   - come up with a username for your bot and get an api key
-- update `lib.config.user.json` with appropriate values, your api key and your bot's username especially. You probably want to ignore the #general room - you cannot remove your bot from that room and probably don't want to spam it while you develop.
+- update `lib.config.user.json` with appropriate values, your api key and your bot's username especially. You probably want to ignore the #cfml-general room - you can not remove your bot from that room and probably don't want to spam it while you develop. Add ignores **without** the octothorpe. Do this: `"ignoreChannels": ["cfml-general"]` not this: `"ignoreChannels": ["#cfml-general"]`
 - run `node main.js` to connect and test!
 
 That may have seemed complicated, but really shouldn't more than a few minutes.
@@ -25,7 +25,7 @@ That may have seemed complicated, but really shouldn't more than a few minutes.
 
 Try and match style of the plugin you are in - if you are the one writing the plugin, feel free to use your own style - within the style guidelines set up.
 
-We use JSCS and JSHint.  Please make sure you run your code through these tools before submitting a PR.
+We use JSCS and JSHint.  Please make sure you run your code through these tools before submitting a PR. Appropriate "rc" files for both are in the root of the repository.
 
 ### IntelliJ
 
@@ -33,13 +33,17 @@ If you are using intellij, JSCS and JSHint support is built in.  For JSCS you st
 
 You also want to change your Javascript Language Version to ECMAScript 6.
 
+### Sublime Text 3
+
+Packages for JSHint and JSCS are available through [package control](https://packagecontrol.io/) ([install instructions](https://packagecontrol.io/installation#st3)). There are several JSHint plugins available, but most of us use [JSHint Gutter](https://packagecontrol.io/packages/JSHint%20Gutter). Use [JSCS Formatter](https://packagecontrol.io/packages/JSCS-Formatter) to auto-format your code according to `.jscsrc` rules with a single keystroke.
+
 # Notes
 
-`main.js` is written using ES5 level node.js code.  This bootstraps the whole process, and for most development you shouldn't need to modify it.  
+`main.js` is written using ES5 level node.js code.  This bootstraps the whole process, and for most development you shouldn't need to modify it.
 
-The project uses babel though to allow us to write ES6 (ES2015)+ level code in all of the plugins.  All local modules (not nmp dependencies) loaded will be transpiled automatically, so you can use ES5 plus to develop them.  If you are more comfortable sticking with ES5, go for it!  If you are trying to update an existing module written in ES6, try to match style though.
- 
-The only sticking point about transpiling from ES6 is that debugging can be difficult with many editors (although that should be improving).  You can use `console.log` of course though and there is also `bot.log()` available in plugins that works the same way but only actually logs when configured with `debug: true` in your `config.user.json` file.
+The project uses [babel](https://babeljs.io/) to allow us to _optionally_ write ES6 (ES2015)+ level code in all of the plugins.  All local modules (not npm dependencies) loaded will be transpiled automatically, so you can use ES5 plus to develop them.  If you are more comfortable sticking with ES5, go for it!  If you are trying to update an existing module written in ES6, please try to match its style.
+
+The only sticking point about transpiling from ES6 is that debugging can be difficult with many editors (although that should be improving).  You can use `console.log` of course, and there is also `bot.log()` available in plugins that works the same way but only actually logs anything when configured with `debug: true` in your `config.user.json` file.
 
 # Plugin API
 
@@ -52,41 +56,42 @@ All plugins should use this basic template:
 const _ = require('lodash'); //for example
 
 module.exports = (function(){
-	
+
 	let bot;
-	
+
 	//your functions here
-	
+
 	function doSomethingCool (message, channel, user) {
 		//
 	}
-	
+
 	return function init (_bot) {
 		bot = _bot;
-			
-		//any startup steps here	
-			
-		bot.register({ //pattern
+
+		//any startup steps here
+
+		//one of these for each pattern you want to register
+		bot.register({
 			pattern: {},
 			f: doSomethingCool,
 			type: 'OUT',
 			eventType: 'message',
 			priority: 1000,
-			flags: {}			
+			flags: {}
 		});
-		
+
 		//more pattern registrations
 	});
 })();
 ```
 
-The `bot` parameter passed to the `init` method contains many helpful resources and functions that will be documented more as time goes on.  One of the big ones is `bot.redis` which can be used to persist data.  Look at the ops plugin for a relatively simple example of how to use redis, although a lot of plugins use it so look around if you need more examples.
+The `_bot` parameter passed to the `init` method contains many helpful resources and functions that will be documented more as time goes on.  One of the big ones is `bot.redis` which can be used to persist data.  Look at the ops plugin for a relatively simple example of how to use redis, although a lot of plugins use it so look around if you need more examples.
 
 ## Pattern registration
 
 There are currently two different event types (although this will almost certainly grow soon): `message` (the default) and `presenceChange`.
-  
-There are currently two different types of registrations, `IN` and `OUT`.  `IN` is for when you just want to take in input, but don't expect to send any response.  `OUT` signals that you want to send a response.
+
+There are currently two different types of registrations, `IN` and `OUT`.  `IN` is for when you just want to take in input, but don't expect to send any response. Logging would be a good example of a valid use of `IN`. `OUT` signifies that you want to send a response.
 
 You can use multiple pattern registrations pointing to the same function if you want to allow multiple inputs to use the same processing.
 
@@ -94,12 +99,30 @@ To register your plugins interest in a pattern, call `bot.register` and pass an 
 
 ```javascript
 {
-	pattern: {},  //required, see more information below
-	f: functionName, //required, a reference to the function that you want called when a message comes through that matches this pattern
-	type: 'OUT', //required, either 'OUT' or 'IN' - you must use 'OUT' if you intend to send responses
-	eventType: 'message', //defaults to 'message', currently can be either 'message' or 'presenceChange' - this value determines what is sent to the function
-	priority: 1000, //defaults to 1000 - can be used to make sure that certain registrations are executed before or after other patterns, even in other plugins, relative to the type.  'IN' patterns always execute before 'OUT' patterns.
-	flags: {} //an object - defaults to an empty object.  Setting keys inside of this object to true can alter execution - see more information below
+	//required, see more information below
+	pattern: {},
+
+	//required, a reference to the function that you want called
+	//when a message comes through that matches this pattern
+	f: functionName,
+
+	//required, either 'OUT' or 'IN' - you must use 'OUT'
+	//if you intend to send responses
+	type: 'OUT',
+
+	//defaults to 'message', currently can be either 'message' or
+	//'presenceChange' - this value determines what is sent to the function
+	eventType: 'message',
+
+	//defaults to 1000 - can be used to make sure that certain
+	//registrations are executed before or after other patterns,
+	//even in other plugins, relative to the type.  'IN' patterns
+	//always execute before 'OUT' patterns.
+	priority: 1000,
+
+	//an object - defaults to an empty object.  Setting keys inside of
+	//this object to true can alter execution - see more information below
+	flags: {}
 }
 ```
 
@@ -157,7 +180,7 @@ For eventType `message`, your function should use the signature `function (messa
 
 #### `user` argument
 
-`user` is defined by the slack-client module.  
+`user` is defined by the slack-client module.
 
 `user.name` is the users username.
 
