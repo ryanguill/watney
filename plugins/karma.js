@@ -152,7 +152,7 @@ module.exports = (function(){
 		let leaderboard = getLeaderboard();
 
 		channel.send('The top 10 karma holders are ' +
-			leaderboard.map(o => bot.makeMention(bot.getUserByName(o.receiver)) + ' (' + o.value + ')').join(', ') +
+			leaderboard.slice(0,10).map(o => o.receiver + ' (' + o.value + ')').join(', ') +
 			'. Total karma holders: ' + leaderboard.length);
 	}
 
@@ -160,7 +160,7 @@ module.exports = (function(){
 		let leaderboard = getGiverLeaderboard();
 
 		channel.send('The top 10 karma givers are ' +
-			leaderboard.map(o => bot.makeMention(bot.getUserByName(o.giver)) + ' (' + o.value + ')').join(', ') +
+			leaderboard.slice(0,10).map(o => o.giver + ' (' + o.value + ')').join(', ') +
 			'. Total karma givers: ' + leaderboard.length);
 	}
 
