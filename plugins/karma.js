@@ -96,7 +96,9 @@ module.exports = (function(){
 		}
 
 		if (_.isUndefined(slackUser)) {
-			return channel.send('I`m not sure who ' + receiverUsername + ' is...');
+			//removing for now, might put back if the user used an @
+			//return channel.send('I`m not sure who ' + receiverUsername + ' is...');
+			return;
 		}
 
 		if (slackUser.name === user.name) {
@@ -120,7 +122,7 @@ module.exports = (function(){
 
 		channel.is_im = channel.is_im || false;
 		if (channel.is_im) {
-			return channel.send("You can not give karma in Direct Messages");
+			return channel.send('You can not give karma in Direct Messages');
 		}
 
 		addKarma(message, channel, user, username);
@@ -131,7 +133,7 @@ module.exports = (function(){
 
 		channel.is_im = channel.is_im || false;
 		if (channel.is_im) {
-			return channel.send("You can not give karma in Direct Messages");
+			return channel.send('You can not give karma in Direct Messages');
 		}
 
 		addKarma(message, channel, user, username);
@@ -142,7 +144,7 @@ module.exports = (function(){
 
 		channel.is_im = channel.is_im || false;
 		if (channel.is_im) {
-			return channel.send("You can not give karma in Direct Messages");
+			return channel.send('You can not give karma in Direct Messages');
 		}
 
 		addKarma(message, channel, user, username);
