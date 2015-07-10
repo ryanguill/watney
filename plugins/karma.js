@@ -153,9 +153,20 @@ module.exports = (function(){
 	function displayLeaderboard (message, channel, user) {
 		let leaderboard = getLeaderboard();
 
-		channel.send('The top 10 karma holders are ' +
-			leaderboard.slice(0,10).map(o => o.receiver + ' (' + o.value + ')').join(', ') +
-			'. Total karma holders: ' + leaderboard.length);
+		let top10 = leaderboard.reduce((agg, o) => {
+			agg[ o.place ] = agg[ o.place ] || []; //I think there is a _. method to make this cleaner, defaults or something, I need to look it up
+			agg[ o.place ].push( o );
+			return agg;
+		}, {});
+
+		let board = '';
+		for (let place of [1,2,3,4,5,6,7,8,9,10]){
+			if (_.has(top10, place)){
+				board += `\n[ #${place} @ ${_.first(top10[ place ]).value}ƙ ]: ${_.pluck(top10[ place ], 'receiver').join(', ')}`;
+			}
+		}
+
+		channel.send( `ƙarma leaderboard:\`\`\`${board}\nTotal karma holders: ${leaderboard.length}\`\`\`` );
 	}
 
 	function displayGiverLeaderboard (message, channel, user) {
