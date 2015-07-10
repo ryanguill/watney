@@ -43,7 +43,7 @@
 		);
 
 		b.conf = conf;
-		b.botName = conf.get('botName');
+		b.botName = conf.get('botName').toLowerCase();
 
 		if (_.isUndefined(b.botName)) {
 			throw('you must define the botName in the config file! ' + getConfigFile());
