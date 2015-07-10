@@ -108,6 +108,11 @@ module.exports = (function() {
 							fitMsg = fitMsg + '...';
 						}
 						fitMsg = fitMsg + link;
+
+						if (!_.isUndefined(result.discouraged)) {
+							fitMsg += ' *DISCOURAGED! ' + result.discouraged + '*';
+						}
+
 						channel.send(fitMsg);
 					}
 				});
