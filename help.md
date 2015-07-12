@@ -81,3 +81,14 @@ Same as !stats but lists information for all channels the bot is participating i
 
 Shows how long the bot has been running.
 
+### !raffle
+
+See information on the active raffle.
+
+### !ticket (in DM only)
+
+Send a direct message to the bot's account to get a ticket to the raffle.
+
+### !raffle -listTickets
+
+See which members have tickets and how many.
