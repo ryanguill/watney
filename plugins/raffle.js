@@ -35,11 +35,17 @@ module.exports = (function(){
 		if (!_.isUndefined(currentRaffle)) {
 
 			let uniqueTicketHolderCount = getUniqueTicketMembers().length;
-			return channel.send(currentRaffle.desc + '\nDirect message ' + bot.makeMention(bot.getUserByName(bot.botName)) +
-				' the command `!ticket` to enter.  You can enter every ' +
-				moment.duration(currentRaffle.cooldown, 'minutes').humanize().replace('an ','').replace('a ', '') + '\n' +
-				'I have given out ' + tickets.length + ' ticket' + (tickets.length !== 1 ? 's' : '') + ' to ' +
+			channel.send(currentRaffle.desc + '\nDirect message ' + bot.makeMention(bot.getUserByName(bot.botName)) +
+				' the command `!ticket` to enter.');
+			if (currentRaffle.cooldown === -1) {
+				channel.send('You can only enter once.');
+			} else {
+				channel.send('You can enter every ' +
+					moment.duration(currentRaffle.cooldown, 'minutes').humanize().replace('an ', '').replace('a ', ''));
+			}
+			channel.send('I have given out ' + tickets.length + ' ticket' + (tickets.length !== 1 ? 's' : '') + ' to ' +
 				uniqueTicketHolderCount + ' different member' + (uniqueTicketHolderCount !== 1 ? 's' : '') + '!');
+			return;
 		}
 
 		return channel.send('There is no active raffle at this time.');
@@ -116,8 +122,9 @@ module.exports = (function(){
 
 		cooldown = Number(cooldown);
 
-		if (_.isUndefined(cooldown) || !_.isFinite(cooldown) || cooldown < 0) {
-			return channel.send('I need a proper cooldown value.  Try `!raffle -cooldown {cooldown}` with a positive integer');
+		if (_.isUndefined(cooldown) || !_.isFinite(cooldown) || (cooldown < 1 && cooldown !== -1)) {
+			return channel.send('I need a proper cooldown value.  Try `!raffle -cooldown {cooldown}` with an integer, or' +
+				' -1 to only allow one vote per user.');
 		}
 
 		if (_.isUndefined(currentRaffle)) {
@@ -172,20 +179,28 @@ module.exports = (function(){
 		}
 
 		let lastTicket = getUserLastTicket(user);
-		if (_.isUndefined(lastTicket) || (_.now() - lastTicket.ts) > currentRaffle.cooldown * 60 * 1000) {
+		//todo: this needs to be cleaned up, probably refactored into functions
+		if (_.isUndefined(lastTicket) || ((_.now() - lastTicket.ts) > currentRaffle.cooldown * 60 * 1000) &&
+			currentRaffle.cooldown !== -1) {
 			tickets.push({user: user.name, ts: _.now()});
 			persistTickets();
 			//todo: would like to find a way to do /me
 			channel.send(bot.botName + ' gives ' + user.name + ' a ticket.');
 		} else {
-			channel.send('You can`t get another ticket yet! You must wait ' +
-				moment.duration(currentRaffle.cooldown * 60 * 1000 - (_.now() - lastTicket.ts)).humanize());
-			channel.send(currentRaffle.cooldown * 60 * 1000 - (_.now() - lastTicket.ts) + 'ms');
+			if (currentRaffle.cooldown === -1) {
+				return channel.send('You can only get one ticket for this raffle, but you`re entered!');
+			} else {
+				channel.send('You can`t get another ticket yet! You must wait ' +
+					moment.duration(currentRaffle.cooldown * 60 * 1000 - (_.now() - lastTicket.ts)).humanize());
+				channel.send(currentRaffle.cooldown * 60 * 1000 - (_.now() - lastTicket.ts) + 'ms');
+
+			}
 		}
 
 		var ticketCount = getUserTickets(user).length;
 
 		return channel.send('You have ' + ticketCount + ' ticket' + (ticketCount !== 1 ? 's' : ''));
+
 	}
 
 	function getUserTickets (user) {
@@ -244,11 +259,13 @@ module.exports = (function(){
 		let board = '';
 		for (let place of [1,2,3,4,5,6,7,8,9,10]){
 			if (_.has(ordered, place)){
-				board += `\n[${_.first(ordered[ place ]).value} tickets]: ${_.pluck(ordered[ place ], 'user').join(', ')}`;
+				let value = _.first(ordered[ place ]).value;
+				let usersList = _.pluck(ordered[ place ], 'user').join(', ');
+				board += `\n[${value} ticket${value !== 1 ? 's' : ''}]: ${usersList}`;
 			}
 		}
 
-		channel.send( `Tickets given out:\`\`\`${board}\nTotal ticket holders: ${counts.length}\`\`\`` );
+		channel.send( `\`\`\`${board}\nTotal ticket holders: ${counts.length}\`\`\`` );
 	}
 
 	return function init (_bot) {
