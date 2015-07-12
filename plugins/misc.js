@@ -28,7 +28,7 @@ module.exports = (function(){
 			, 'Outlook not so good.'
 			, 'Very doubtful.'];
 
-		return responses[_.random(0, responses.length)].split('{from}').join(from);
+		return responses[_.random(0, responses.length - 1)].split('{from}').join(from);
 	}
 
 	function give8BallResponse (message, channel, user) {
