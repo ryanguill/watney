@@ -65,8 +65,8 @@ module.exports = (function(){
 		}
 
 		desc = _.map(desc, function(word){
-			if ( word.slice(0,5) === '<http' && word.slice(-1) === '>' ){
-				return word.replace(/[<>]/g, '');
+			if ( word.slice(0,5) === '<http' && word.trim().slice(-1) === '>' ){
+				return word.replace(/[>](\s+)/g, '$1').replace(/[<]/g, '');
 			}else{
 				return word;
 			}
@@ -161,8 +161,8 @@ module.exports = (function(){
 		}
 
 		desc = _.map(desc, function(word){
-			if ( word.slice(0,5) === '<http' && word.slice(-1) === '>' ){
-				return word.replace(/[<>]/g, '');
+			if ( word.slice(0,5) === '<http' && word.trim().slice(-1) === '>' ){
+				return word.replace(/[>](\s+)/g, '$1').replace(/[<]/g, '');
 			}else{
 				return word;
 			}
