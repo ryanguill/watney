@@ -64,7 +64,14 @@ module.exports = (function(){
 			return channel.send('You have to give me a description.  Try `!raffle -create {description}`');
 		}
 
-		desc = desc.join(' ').replace(/[<>]/g, '');
+		desc = _.map(desc, function(word){
+			if ( word.slice(0,5) === '<http' && word.slice(-1) === '>' ){
+				return word.replace(/[<>]/g, '');
+			}else{
+				return word;
+			}
+		});
+		desc = desc.join(' ');
 
 		bot.ops.isOp(user.name, (err, data) => {
 			if (err) return channel.send('error! ' + err);
@@ -153,7 +160,14 @@ module.exports = (function(){
 			return channel.send('You have to give me a new description.  Try `!raffle -update {description}`');
 		}
 
-		desc = desc.join(' ').replace(/[<>]/g, '');
+		desc = _.map(desc, function(word){
+			if ( word.slice(0,5) === '<http' && word.slice(-1) === '>' ){
+				return word.replace(/[<>]/g, '');
+			}else{
+				return word;
+			}
+		});
+		desc = desc.join(' ');
 
 		bot.ops.isOp(user.name, (err, data) => {
 			if (err) return channel.send('error! ' + err);
