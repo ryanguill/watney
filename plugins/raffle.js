@@ -64,7 +64,7 @@ module.exports = (function(){
 			return channel.send('You have to give me a description.  Try `!raffle -create {description}`');
 		}
 
-		desc = desc.join(' ');
+		desc = desc.join(' ').replace(/[<>]/, '');
 
 		bot.ops.isOp(user.name, (err, data) => {
 			if (err) return channel.send('error! ' + err);
@@ -153,7 +153,7 @@ module.exports = (function(){
 			return channel.send('You have to give me a new description.  Try `!raffle -update {description}`');
 		}
 
-		desc = desc.join(' ');
+		desc = desc.join(' ').replace(/[<>]/, '');
 
 		bot.ops.isOp(user.name, (err, data) => {
 			if (err) return channel.send('error! ' + err);
