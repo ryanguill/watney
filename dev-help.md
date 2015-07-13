@@ -19,7 +19,7 @@ Getting started should be as simple as:
 - update `lib.config.user.json` with appropriate values, your api key and your bot's username especially. You probably want to ignore the #cfml-general room - you can not remove your bot from that room and probably don't want to spam it while you develop. Add ignores **without** the octothorpe. Do this: `"ignoreChannels": ["cfml-general"]` not this: `"ignoreChannels": ["#cfml-general"]`
 - run `node main.js` to connect and test!
 
-That may have seemed complicated, but really shouldn't more than a few minutes.
+That may have seemed complicated, but really shouldn't take more than a few minutes.
 
 ## Style and Quality
 
