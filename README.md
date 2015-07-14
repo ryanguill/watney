@@ -6,12 +6,15 @@ Decendent of [zoidbox](https://github.com/atuttle/zoidbox), originally written f
 Ideally an open slack bot platform, ready for customization for your own slack room, easy to extend with your own functionality. 
 
 **User Docs**
+
 For interacting with @watney, See [help](https://github.com/ryanguill/watney/blob/master/help.md) and [ops-help](https://github.com/ryanguill/watney/blob/master/ops-help.md)
 
 **Developer Documentation**
+
 For customizing or extending @watney, see [dev-help](https://github.com/ryanguill/watney/blob/master/dev-help.md)
 
 **Contributing Guidelines**
+
 Coming soon!
 
 ### The MIT License (MIT)
