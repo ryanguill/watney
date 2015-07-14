@@ -21,6 +21,7 @@
     "redis": "^0.12.1",
     "request": "^2.44.0",
     "slack-client": "^1.4.1",
-    "valid-url": "^1.0.9"
+    "valid-url": "^1.0.9",
+    "walk": "^2.3.4"
   }
 }
