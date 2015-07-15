@@ -40,22 +40,22 @@ module.exports = (function() {
 
 		switch (unit) {
 			case 'f':
-				channel.send( measurement + ' degrees fahrenheit is approximately ' + convertFahrenheitToCelcius(measurement) + ' degrees celcius.' );
+				channel.send( `${measurement}°F is approximately ${convertFahrenheitToCelcius(measurement)}°C` );
 				break;
 			case 'c':
-				channel.send( measurement + ' degrees celcius is approximately ' + convertCelciusToFahrenheit(measurement) + ' degrees fahrenheit.' );
+				channel.send( `${measurement}°C is approximately ${convertCelciusToFahrenheit(measurement)}°F` );
 				break;
 
 			case 'mm':
-				channel.send( measurement + ' millimeters is approximately ' + convertMillimetersToInches(measurement) + ' inches.' );
+				channel.send( `${measurement} mm is approximately ${convertMillimetersToInches(measurement)} in.` );
 				break;
 
 			case 'in':
-				channel.send( measurement + ' inches is approximately ' + convertInchesToMillimeters(measurement) + ' millimeters.' );
+				channel.send( `${measurement} in is approximately ${convertInchesToMillimeters(measurement)} mm.` );
 				break;
 
 			case '"':
-				channel.send( measurement + ' inches is approximately ' + convertInchesToMillimeters(measurement) + ' millimeters.' );
+				channel.send( `${measurement} in is approximately ${convertInchesToMillimeters(measurement)} mm.` );
 				break;
 
 			default:
