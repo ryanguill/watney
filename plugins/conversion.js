@@ -11,51 +11,56 @@ module.exports = (function() {
 
 		if(!args.length){
 			channel.send('Please provide something to convert.');
+			return true
+		}
+
+		//The user put a space between the measurement and the units
+		if(args.length > 1){
+			measurement = args[0];
+			unit = args[1].toLowerCase();
 		} else {
-			//The user put a space between the measurement and the units
-			if(args.length > 1){
-				measurement = args[0];
-				unit = args[1];
+
+			//Extract the measurement and units from a single string
+			let measurements = args[0].match(/^[\d.-]+/g);
+			let units = args[0].match(/[^\d.-]+/g);
+
+			if( !(measurements && measurements.length && units && units.length) ){
+				channel.send( 'Unable to extract measurement and/or units from the given parameters');
 			} else {
-
-				//Extract the measurement and units from a single string
-				let measurements = args[0].match(/^[\d.]+/g);
-				let units = args[0].match(/[^\d.]+/g);
-
-				if( !(measurements.length && units.length) ){
-					channel.send( 'Unable to extract measurement and/or units from the given parameters');
-				} else {
-					measurement = measurements[0];
-					unit = units[0];
-				}
-
+				measurement = measurements[0];
+				unit = units[0].toLowerCase();
 			}
 
-			switch (unit) {
-				case 'f':
-					channel.send( measurement + ' degrees fahrenheit is approximately ' + convertFahrenheitToCelcius(measurement) + ' degrees celcius.' );
-					break;
-				case 'c':
-					channel.send( measurement + ' degrees celcius is approximately ' + convertCelciusToFahrenheit(measurement) + ' degrees fahrenheit.' );
-					break;
+		}
 
-				case 'mm':
-					channel.send( measurement + ' millimeters is approximately ' + convertMillimetersToInches(measurement) + ' inches.' );
-					break;
+		if( ( unit !== 'f' && unit !== 'c' ) && measurement < 0 ){
+			channel.send( 'Can\'t go below 0 on that one mate...' );
+			return true;
+		}
 
-				case 'in':
-					channel.send( measurement + ' inches is approximately ' + convertInchesToMillimeters(measurement) + ' millimeters.' );
-					break;
+		switch (unit) {
+			case 'f':
+				channel.send( measurement + ' degrees fahrenheit is approximately ' + convertFahrenheitToCelcius(measurement) + ' degrees celcius.' );
+				break;
+			case 'c':
+				channel.send( measurement + ' degrees celcius is approximately ' + convertCelciusToFahrenheit(measurement) + ' degrees fahrenheit.' );
+				break;
 
-				case '"':
-					channel.send( measurement + ' inches is approximately ' + convertInchesToMillimeters(measurement) + ' millimeters.' );
-					break;
+			case 'mm':
+				channel.send( measurement + ' millimeters is approximately ' + convertMillimetersToInches(measurement) + ' inches.' );
+				break;
 
-				default:
-					channel.send('I did not recognize the units you wanted me to convert from.');
-					break;
-			}
+			case 'in':
+				channel.send( measurement + ' inches is approximately ' + convertInchesToMillimeters(measurement) + ' millimeters.' );
+				break;
 
+			case '"':
+				channel.send( measurement + ' inches is approximately ' + convertInchesToMillimeters(measurement) + ' millimeters.' );
+				break;
+
+			default:
+				channel.send('I did not recognize the units you wanted me to convert from.');
+				break;
 		}
 
 	}
