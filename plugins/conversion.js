@@ -61,15 +61,11 @@ module.exports = (function() {
 	}
 
 	function convertCelciusToFahrenheit(degrees){
-
 		return Math.round( ((degrees*9)/5)+32 );
-
 	}
 
 	function convertFahrenheitToCelcius(degrees){
-
 		return Math.round( ((degrees-32)*5)/9 );
-
 	}
 
 	function convertMillimetersToInches( mm ){
