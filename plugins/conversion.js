@@ -24,7 +24,7 @@ module.exports = (function() {
 			let measurementParts = args[0].match(/^[\d.-]+/g);
 			let unitParts = args[0].match(/[^\d.-]+/g);
 
-			if( !(measurements && measurements.length && units && units.length) ){
+			if( !(measurementParts && measurementParts.length && unitParts && unitParts.length) ){
 				channel.send( 'Unable to extract measurement and/or units from the given parameters');
 			} else {
 				measurement = measurementParts[0];
