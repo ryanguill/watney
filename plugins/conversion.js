@@ -11,24 +11,24 @@ module.exports = (function() {
 
 		if(!args.length){
 			channel.send('Please provide something to convert.');
-			return true
+			return true;
 		}
 
-		//The user put a space between the measurement and the units
+		//The user put a space between the measurement and the unit
 		if(args.length > 1){
 			measurement = args[0];
 			unit = args[1].toLowerCase();
 		} else {
 
 			//Extract the measurement and units from a single string
-			let measurements = args[0].match(/^[\d.-]+/g);
-			let units = args[0].match(/[^\d.-]+/g);
+			let measurementParts = args[0].match(/^[\d.-]+/g);
+			let unitParts = args[0].match(/[^\d.-]+/g);
 
 			if( !(measurements && measurements.length && units && units.length) ){
 				channel.send( 'Unable to extract measurement and/or units from the given parameters');
 			} else {
-				measurement = measurements[0];
-				unit = units[0].toLowerCase();
+				measurement = measurementParts[0];
+				unit = unitParts[0].toLowerCase();
 			}
 
 		}
