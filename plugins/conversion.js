@@ -75,11 +75,11 @@ module.exports = (function() {
     }
 
     function convertMillimetersToInches( mm ){
-        return mm * 0.0393701;
+        return Math.round(( (mm * 0.0393701) + 0.00001) * 100) / 100;
     }
 
     function convertInchesToMillimeters( inches ){
-        return inches * 25.4;
+        return Math.round(( (inches * 25.4) + 0.00001) * 100) / 100;
     }
 
 	return function init (_bot) {
