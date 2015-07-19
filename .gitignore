@@ -2,3 +2,5 @@ node_modules/*
 *.iml
 .idea/*
 lib/config.user.json
+lib/watney.user.json
+bin/*

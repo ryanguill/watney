@@ -2,28 +2,23 @@
 
 (function bootstrap() {
 
-	require('babel/register')({
-		// Setting this will remove the currently hooked extensions of .es6, `.es`, `.jsx`
-		// and .js so you'll have to add them back if you want them to be used again.
-		extensions: ['.es6', '.es', '.jsx', '.js']
-	});
+	var babel = require('babel-core');
+	require('babel/polyfill');
 
 	var _ = require('lodash');
+	var fs = require('fs');
+
 	var conf = require('nconf')
 		.argv()
 		.env()
 		.file({file: getConfigFile()})
 		.defaults({
-			karmaCooldown: 60,
 			testingChannel: '#bots'
 		});
 
 	var bot = initSlack(conf);
-	bot.login();
 
-	bot.setMaxListeners(20);
-	bot.use(require('./lib/core'));
-	//bot.use( require('./lib/ops') );
+	bot.login();
 	bot.loadPlugins();
 
 	//=====================================================
@@ -32,6 +27,50 @@
 		var override = './lib/config.user.json'
 			, def = './lib/config.json';
 		return require('fs').existsSync(override) ? override : def;
+	}
+
+	function getWatneyConfigFile() {
+		var override = './lib/watney.user.json'
+			, def = './lib/watney.json';
+		return require('fs').existsSync(override) ? override : def;
+	}
+
+	function ensureExists(path, cb) {
+		fs.mkdir(path, function(err) {
+			if (err) {
+				if (err.code === 'EEXIST') {
+					cb(null);
+				} else {
+					cb(err);
+				}
+			} else {
+				cb(null);
+			}
+		});
+	}
+
+	function copyFile(source, target, cb) {
+		var cbCalled = false;
+
+		var rd = fs.createReadStream(source);
+		rd.on('error', function(err) {
+			done(err);
+		});
+		var wr = fs.createWriteStream(target);
+		wr.on('error', function(err) {
+			done(err);
+		});
+		wr.on('close', function(ex) {
+			done();
+		});
+		rd.pipe(wr);
+
+		function done(err) {
+			if (!cbCalled) {
+				cb(err);
+				cbCalled = true;
+			}
+		}
 	}
 
 	function initSlack(conf) {
@@ -94,33 +133,99 @@
 		});
 
 
-		b.use = function use(plugin) {
-			plugin(bot);
+		b.use = function use(plugin, config) {
+			plugin(bot, config);
 		};
 
 		b.loadPlugins = function loadPlugins() {
-			var plugins = [];
-			var walk = require('walk');
-			var walker = walk.walk('./plugins', {followLinks: false});
+			var loadedPlugins = [];
 
-			walker.on('file', function (root, stat, next) {
+			//load config file
+			var watneyConf = require(getWatneyConfigFile());
 
-				if (_.contains(['.js', '.es6'], stat.name.slice(-3))) {
-					console.log('loading plugin %s/%s', root, stat.name);
-					try {
-						bot.use(require(root + '/' + stat.name));
-						plugins.push(root + '/' + stat.name);
-					} catch (err) {
-						console.error(err);
-						console.log('----------------------');
+			function loadPluginsInOrder(plugins, finalCallback) {
+				var plugin = _.first(plugins);
+
+				if (_.isUndefined(plugin)) {
+					if (_.isFunction(finalCallback)) {
+						finalCallback(loadedPlugins);
 					}
+					return;
 				}
 
-				next();
-			});
+				if (_.isUndefined(plugin.transpile)) {
+					plugin.transpile = true;
+				}
 
-			walker.on('end', function () {
-				console.log('plugins loaded: %s', plugins);
+				if (_.isUndefined(plugin.disabled) || !_.isBoolean(plugin.disabled)) {
+					plugin.disabled = false;
+				}
+
+				if (_.isUndefined(plugin.id) || !plugin.id.length) {
+					console.error('Invalid Plugin in watney configuration, please provide an id.', plugin);
+					throw 'Invalid Plugin Configuration';
+				}
+
+				if (_.isUndefined(plugin.path) || !plugin.path.length) {
+					console.error('Invalid Plugin in watney configuration, please provide a path to the plugin.', plugin);
+					throw 'Invalid Plugin Configuration';
+				}
+
+				if (_.find(loadedPlugins, {id: plugin.id})) {
+					throw 'Plugins can only be loaded once: ' + plugin.id;
+				}
+
+				if (plugin.disabled) {
+					return loadPluginsInOrder(_.rest(plugins), finalCallback);
+				}
+
+
+				plugin.binDir = './bin/' + plugin.id;
+				plugin.binPath = plugin.binDir + '/' + plugin.id + '.js';
+				plugin.binMapPath = plugin.binDir + '/' + plugin.id + '.map';
+
+				loadedPlugins.push(plugin);
+
+
+
+				ensureExists(plugin.binDir, function (err) {
+					if (err) throw(err);
+
+					if (plugin.transpile) {
+						babel.transformFile(plugin.path, {}, function (err, result) {
+							if (err) throw(err);
+
+							fs.writeFile(plugin.binPath, result.code, {}, function (err) {
+								if (err) throw(err);
+
+								console.log('Loaded', {id: plugin.id, transpile: plugin.transpile});
+								bot.use(require(plugin.binPath), plugin);
+								loadPluginsInOrder(_.rest(plugins), finalCallback);
+							});
+							fs.writeFile(plugin.binMapPath, result.map, {}, function (err) {
+								if (err) throw(err);
+							});
+
+						});
+
+					} else {
+						copyFile(plugin.path, plugin.binPath, function (err, result) {
+							if (err) throw(err);
+
+							console.log('Loaded', {id: plugin.id, transpile: plugin.transpile});
+							bot.use(require(plugin.binPath), plugin);
+							loadPluginsInOrder(_.rest(plugins), finalCallback);
+						});
+					}
+				});
+			}
+
+			ensureExists('./bin', function(err) {
+				if (err) throw(err);
+
+				loadPluginsInOrder(watneyConf.plugins, function(plugins) {
+					console.log('Plugin Load Complete, plugin count: ', plugins.length);
+				});
 			});
 		};
 

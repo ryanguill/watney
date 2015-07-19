@@ -157,7 +157,7 @@ module.exports = (function(){
 				channel.originalChannelSend = channel.send;
 				channel.send = function (text, dontLog) {
 					dontLog = dontLog || false;
-					//console.log('wrapped send', text, dontLog);
+
 					if (!dontLog) {
 						bot.countMessage({text: text}, channel, bot.getUserByName(bot.botName));
 						bot.logMessage({text: text}, channel, bot.getUserByName(bot.botName));

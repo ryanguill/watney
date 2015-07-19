@@ -1,0 +1,60 @@
+{
+  "plugins": [
+    {
+      "id": "core",
+      "path": "plugins/core.js"
+    },
+    {
+      "id": "ops",
+      "path": "plugins/ops.js",
+      "ops": ["ryanguill"]
+    },
+    {
+      "id": "deployment",
+      "path": "plugins/deployment.js"
+    },
+    {
+      "id": "history",
+      "path": "plugins/history.js",
+      "maxHistoryPerChannel": 15000
+    },
+    {
+      "id": "karma",
+      "path": "plugins/karma.js"
+    },
+    {
+      "id": "lookup",
+      "path": "plugins/lookup.js"
+    },
+    {
+      "id": "stats",
+      "path": "plugins/stats.js"
+    },
+    {
+      "id": "conversion",
+      "path": "plugins/conversion.js"
+    },
+    {
+      "id": "dice",
+      "path": "plugins/dice.js"
+    },
+    {
+      "id": "echo",
+      "path": "plugins/echo.js",
+      "disabled": false,
+      "transpile": false
+    },
+    {
+      "id": "isup",
+      "path": "plugins/isup.js"
+    },
+    {
+      "id": "misc",
+      "path": "plugins/misc.js"
+    },
+    {
+      "id": "raffle",
+      "path": "plugins/raffle.js"
+    }
+  ]
+}

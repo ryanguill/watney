@@ -3,11 +3,12 @@ const _ = require('lodash');
 module.exports = (function(){
 
 	let bot,
-		redis;
+		redis,
+		config;
 
 	function initOps () {
-		var defaultOps = bot.conf.get('ops') || [];
-		bot.log(defaultOps);
+		var defaultOps = config.ops || [];
+		bot.log('defaultOps: ', defaultOps);
 		if (defaultOps.length) {
 			_.each(defaultOps, function(item){
 				redis.sadd(bot.botName + '.ops', item.toLowerCase());
@@ -130,8 +131,9 @@ module.exports = (function(){
 		bot.playChannel(channel, user);
 	}
 
-	return function init (_bot) {
+	return function init (_bot, _config) {
 		bot = _bot;
+		config = _config;
 		redis = bot.redis;
 
 		initOps();
