@@ -6,6 +6,7 @@ module.exports = (function(){
 	let bot;
 	let redis;
 	let maxUsers;
+	let lastActivity = _.now();
 
 	function displayRunningTime (message, channel) {
 		channel.send('I have been running for ' + moment(bot.starttime).fromNow(true));
@@ -35,6 +36,7 @@ module.exports = (function(){
 	}
 
 	function setLastSeen (message, channel, user) {
+		lastActivity = _.now();
 		if (!_.isUndefined(user)) {
 			redis.hset(bot.botName + '.' + channel.name + '.lastseen', user.name.toLowerCase(), Date.now());
 		}
@@ -116,6 +118,7 @@ module.exports = (function(){
 
 	function highWaterMarkCheck (user, presence) {
 
+		lastActivity = _.now();
 		let activeUsers = _.filter(bot.users, {presence: 'active'}).length;
 		/*
 		console.log('highWaterMarkCheck', activeUsers, maxUsers, _.keys(bot.users).length);
@@ -147,6 +150,13 @@ module.exports = (function(){
 		});
 	}
 
+	function checkLastMessageTime (params) {
+		if ((_.now() - lastActivity) > 1000 * 60 * 5) {
+			console.error('No slack activity in > 5 minutes, restarting to make sure we are still connected');
+			setTimeout(() => process.exit(1), 1000);
+		}
+	}
+
 	return function init( _bot) {
 		bot = _bot;
 		redis = bot.redis;
@@ -160,6 +170,12 @@ module.exports = (function(){
 				maxUsers = JSON.parse(data);
 			});
 		}, 2000);
+
+		bot.registerInterval({
+			pattern: {delay: 1000 * 60}, // 1 minute
+			f: checkLastMessageTime,
+			type: 'IN'
+		});
 
 		bot.register({
 			pattern: {},
