@@ -1,23 +1,25 @@
-const _ = require('lodash');
+'use strict';
 
-module.exports = (function(){
+var _ = require('lodash');
 
-	let bot;
-	let redis;
+module.exports = (function () {
 
-	let lastMessage = '';
+	var bot;
+	var redis;
 
-	const echo = function echo (message, channel, user) {
+	var lastMessage = '';
 
-		return channel.send(bot.makeMention(user) + ' ' +_.rest(message.parts).join(' '));
+	var echo = function echo(message, channel, user) {
+
+		return channel.send(bot.makeMention(user) + ' ' + _.rest(message.parts).join(' '));
 	};
 
-	const storeLast = function storeLast (message, channel, user) {
+	var storeLast = function storeLast(message, channel, user) {
 		lastMessage = bot.makeMention(user) + ' said  `' + message.text + '`';
 		//console.log('storeLast', lastMessage);
 	};
 
-	const getLastMessage = function getLastMessage (message, channel) {
+	var getLastMessage = function getLastMessage(message, channel) {
 		if (lastMessage.length) {
 			return channel.send(lastMessage);
 		} else {
@@ -25,24 +27,23 @@ module.exports = (function(){
 		}
 	};
 
-	return function init(_bot){
+	return function init(_bot) {
 		bot = _bot;
 		redis = bot.redis;
 
 		//empty pattern matches everything
-		bot.register({pattern:{},
+		bot.register({ pattern: {},
 			f: storeLast,
-			type: 'IN'});
+			type: 'IN' });
 
-		bot.register({pattern: {startsWith: '!lastMessage'},
+		bot.register({ pattern: { startsWith: '!lastMessage' },
 			f: getLastMessage,
 			type: 'OUT',
-			priority: 1000});
+			priority: 1000 });
 
-		bot.register({pattern: {startsWith: '!echo'},
+		bot.register({ pattern: { startsWith: '!echo' },
 			f: echo,
 			type: 'OUT',
-			priority: 1000});
+			priority: 1000 });
 	};
-
 })();

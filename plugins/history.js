@@ -6,6 +6,7 @@ module.exports = (function(){
 	const request = require('request');
 
 	let bot;
+	let config;
 	let redis;
 	let maxHistoryPerChannel;
 
@@ -200,10 +201,13 @@ module.exports = (function(){
 		return channel.send('I am configured to store ' + maxHistoryPerChannel + ' messages per channel.');
 	}
 
-	return function init( _bot) {
+	return function init( _bot, _config) {
 		bot = _bot;
+		config = _config;
 		redis = bot.redis;
-		maxHistoryPerChannel = _.parseInt(bot.conf.get('maxHistoryPerChannel'));
+
+		maxHistoryPerChannel = config.maxHistoryPerChannel || 1000;
+		console.log(config, maxHistoryPerChannel);
 
 		bot.logMessage = logMessage;
 
