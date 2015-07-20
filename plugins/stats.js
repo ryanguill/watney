@@ -151,8 +151,8 @@ module.exports = (function(){
 	}
 
 	function checkLastMessageTime (params) {
-		if ((_.now() - lastActivity) > 1000 * 60 * 5) {
-			console.error('No slack activity in > 5 minutes, restarting to make sure we are still connected');
+		if ((_.now() - lastActivity) > 1000 * 60 * 15) {
+			console.error('No slack activity in > 15 minutes, restarting to make sure we are still connected');
 			setTimeout(() => process.exit(1), 1000);
 		}
 	}
