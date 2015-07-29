@@ -56,7 +56,7 @@ module.exports = (function(){
 		let receivers = _.uniq(_.pluck(karma, 'receiver'));
 		//let sumByReceiver = _.map(_.map(receivers, getUserKarma), karmaList => karmaList.length);
 		let sumByReceiver = receivers.map(r => {
-			return {receiver: r, value: getUserKarma(r).length};
+			return {handle: r, value: getUserKarma(r).length, valueStr: getUserKarma(r).length};
 		});
 
 		sumByReceiver = _.sortBy(sumByReceiver, 'value').reverse();
@@ -74,7 +74,7 @@ module.exports = (function(){
 		let givers = _.uniq(_.pluck(karma, 'giver'));
 
 		let sumByGiver = givers.map(r => {
-			return {giver: r, value: getUserKarmaGiving(r).length};
+			return {handle: r, value: getUserKarmaGiving(r).length, valueStr: getUserKarmaGiving(r).length};
 		});
 
 		sumByGiver = _.sortBy(sumByGiver, 'value').reverse();
@@ -152,8 +152,18 @@ module.exports = (function(){
 
 	function displayLeaderboard (message, channel, user) {
 		let leaderboard = getLeaderboard();
+		let board = calculateLeaderboard( leaderboard );
+		channel.send( `ƙarma leaderboard:\`\`\`${board}\nTotal karma holders: ${leaderboard.length}\`\`\`` );
+	}
 
-		let top10 = leaderboard.reduce((agg, o) => {
+	function displayGiverLeaderboard (message, channel, user) {
+		let leaderboard = getGiverLeaderboard();
+		let board = calculateLeaderboard( leaderboard );
+		channel.send( `ƙarma-givers leaderboard:\`\`\`${board}\nTotal karma givers: ${leaderboard.length}\`\`\`` );
+	}
+
+	function calculateLeaderboard(data){
+		let top10 = data.reduce((agg, o) => {
 			agg[ o.place ] = agg[ o.place ] || []; //I think there is a _. method to make this cleaner, defaults or something, I need to look it up
 			agg[ o.place ].push( o );
 			return agg;
@@ -162,19 +172,11 @@ module.exports = (function(){
 		let board = '';
 		for (let place of [1,2,3,4,5,6,7,8,9,10]){
 			if (_.has(top10, place)){
-				board += `\n[ #${place} @ ${_.first(top10[ place ]).value}ƙ ]: ${_.pluck(top10[ place ], 'receiver').join(', ')}`;
+				board += `\n[ #${place} @ ${_.first(top10[ place ]).valueStr}ƙ ]: ${_.pluck(top10[ place ], 'handle').join(', ')}`;
 			}
 		}
 
-		channel.send( `ƙarma leaderboard:\`\`\`${board}\nTotal karma holders: ${leaderboard.length}\`\`\`` );
-	}
-
-	function displayGiverLeaderboard (message, channel, user) {
-		let leaderboard = getGiverLeaderboard();
-
-		channel.send('The top 10 karma givers are ' +
-			leaderboard.slice(0,10).map(o => o.giver + ' (' + o.value + ')').join(', ') +
-			'. Total karma givers: ' + leaderboard.length);
+		return board;
 	}
 
 	function displayUserKarma (message, channel, user) {
