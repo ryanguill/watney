@@ -191,12 +191,13 @@ module.exports = (function(){
 			pattern: {regex: /!stats$/g},
 			f: showStats,
 			type: 'OUT'});
-
+/*
+disabling for now, puts out too much information, we suspect the bot is getting kicked for flooding.
 		bot.register({
 			pattern: {regex: /!stats -all$/g},
 			f: showAllStats,
 			type: 'OUT'});
-
+*/
 		bot.register({
 			pattern: {regex: /!stats [^-]+$/g},
 			f: showUserStats,
