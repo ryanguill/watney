@@ -111,7 +111,7 @@ module.exports = (function(){
 
 		giveKarma(channel, user, slackUser);
 
-		let userKarma = getLeaderboard().find(o => o.receiver === slackUser.name);
+		let userKarma = getLeaderboard().find(o => o.handle === slackUser.name);
 
 		return channel.send(bot.makeMention(user) + ' gives karma to ' + bot.makeMention(slackUser.name) +
 			'. They now have ' + userKarma.value + ' karma. #' + userKarma.place + ' overall.');
@@ -195,7 +195,7 @@ module.exports = (function(){
 			return channel.send(bot.makeMention(slackUser) + ' is banned from receiving karma.');
 		}
 
-		let userKarma = getLeaderboard().find(o => o.receiver === slackUser.name);
+		let userKarma = getLeaderboard().find(o => o.handle === slackUser.name);
 
 		if (_.isUndefined(userKarma)) {
 			return channel.send(bot.makeMention(slackUser) + ' doesn`t have any karma yet!');
