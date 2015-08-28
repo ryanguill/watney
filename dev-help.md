@@ -21,6 +21,21 @@ Getting started should be as simple as:
 
 That may have seemed complicated, but really shouldn't take more than a few minutes.
 
+# Updating
+
+Whether you intend to contribute back to watney or not, you probably want to stay up to date with its progress.  Doing so with git is relatively simple, but does require a few extra steps. You want to create a remote called "upstream" that you will be able to pull changes from.  You absolutely need to do this if you intend to contribute to watney.  A quick guide:
+
+From your git command line, do the following
+
+`git remote add upstream https://github.com/ryanguill/watney.git`
+
+Then anytime you want to make sure you are up to date, do:
+
+`git pull --rebase upstream master`
+
+This will get you up to date, then you can branch from here.  If you want to submit a pull request with your changes, commit your changes to your origin, which is your github fork.  Then you can use the github interface to create the pull request (also called a PR).  You will always want to target the master branch in the watney repo.
+
+
 ## Style and Quality
 
 Try and match style of the plugin you are in - if you are the one writing the plugin, feel free to use your own style - within the style guidelines set up.
@@ -41,13 +56,46 @@ Packages for JSHint and JSCS are available through [package control](https://pac
 
 `main.js` is written using ES5 level node.js code.  This bootstraps the whole process, and for most development you shouldn't need to modify it.
 
-The project uses [babel](https://babeljs.io/) to allow us to _optionally_ write ES6 (ES2015)+ level code in all of the plugins.  All local modules (not npm dependencies) loaded will be transpiled automatically, so you can use ES5 plus to develop them.  If you are more comfortable sticking with ES5, go for it!  If you are trying to update an existing module written in ES6, please try to match its style.
+The project uses [babel](https://babeljs.io/) to allow us to _optionally_ write ES6 (ES2015)+ level code in all of the plugins by default, although you can now override this.  
+
+All local modules (not npm dependencies) loaded will be transpiled automatically unless explicitly overridden so you can use ES5 plus to develop them.  If you are more comfortable sticking with ES5, go for it, just specify "preprocess": "none" in your watney.user.json file.
+If you are trying to update an existing module written in ES6, please try to match its style.
 
 The only sticking point about transpiling from ES6 is that debugging can be difficult with many editors (although that should be improving).  You can use `console.log` of course, and there is also `bot.log()` available in plugins that works the same way but only actually logs anything when configured with `debug: true` in your `config.user.json` file.
 
 # Plugin API
 
-There are really only a few things to know about how to write a new plugin.  The first is how to register your interest in different events.
+There are really only a few things to know about how to write a new plugin.  
+
+### watney.user.json
+
+The first is the `watney.json` / `watney.user.json` file.  Like `config.user.json`, `watney.user.json` will be used if it exists, just copy `watney.json` and make your changes in your user file.  
+Only make changes to `watney.json` that you intend to commit back upstream. Never commit your `watney.user.json` file. 
+
+This file defines all of the plugins that watney will load and their order.  It also defines any configuration specific to that plugin and will be passed in when the plugin is created.
+
+At a minimum, all plugins need to have the following keys in their definition:
+
+```json
+{
+  "id": "{plugin-id}",
+  "path": "plugins/{plugin-id}.js"
+}
+```
+
+Make sure you use a unique ID and make sure you specify the right path to the plugin.  Any plugins that are part of watney itself should be in the `plugins/` directory; If you are creating a plugin that is private that you do not intend to contribute back, create a separate directory like `user-plugins/` or something like it to store your plugin in.  At the end of the day watney doesn't care though as long as the path is correct.  It is just a convention.
+
+By default there is another key that is assumed called "preprocess" with a value of "babel".  This will cause your plugin to be transpiled by babel.js.  If you do not want to use babel, and only want to use stock es5 nodejs, you can specify `"preprocess":"none"` in the config and no preprocessing will occur.  Look at the echo plugin for an example of this.  There may be support for other preprocessors in the future such as coffeescript, typescript or clojurescript.  If that is something you are interested in, please get in touch. 
+
+By default there is also a key called "disabled" that is defaulted to false of course.  If you want to remove a plugin from being loaded you have two options, either remove the plugin configuration alltogether, or set "disabled":true and it will not be loaded.  This is the preferred method of disabling built in plugins. Look at the echo plugin for an example of this.  
+
+All configuration keys will be passed in to your plugin's init method as the second argument.  You can provide any other configuration keys you want to be passed in.  This is a great place to put any external authentication keys or configurable parameters.  Look at the ops or history plugins for examples of this.
+
+Just remember that the plugins are in the order that they will be loaded, if you have a dependency on another plugin, make sure you are load the plugin after the one you are dependent on.
+
+### registering for events
+
+The second is how to register your interest in different events.
 
 All plugins should use this basic template:
 
@@ -57,7 +105,8 @@ const _ = require('lodash'); //for example
 
 module.exports = (function(){
 
-	let bot;
+	let bot,
+		config;
 
 	//your functions here
 
@@ -65,8 +114,9 @@ module.exports = (function(){
 		//
 	}
 
-	return function init (_bot) {
+	return function init (_bot, _config) {
 		bot = _bot;
+		config = _config; //this is your configuration object from your watney.user.json file.
 
 		//any startup steps here
 
