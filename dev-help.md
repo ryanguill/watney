@@ -35,6 +35,9 @@ Then anytime you want to make sure you are up to date, do:
 
 This will get you up to date, then you can branch from here.  If you want to submit a pull request with your changes, commit your changes to your origin, which is your github fork.  Then you can use the github interface to create the pull request (also called a PR).  You will always want to target the master branch in the watney repo.
 
+Also, anytime you do pull from upstream, it is a good idea you have updated your npm dependencies, in case anything has changed.
+
+`npm install`
 
 ## Style and Quality
 
