@@ -276,7 +276,7 @@ module.exports = (function(){
 		}
 
 		bot.on('error', function (err) {
-			log('irc error', err);
+			log('slack-client error', err);
 		});
 
 		bot.on('presenceChange', function(user, presence) {
