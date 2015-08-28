@@ -83,11 +83,17 @@ module.exports = (function(){
 	}
 
 	function showAllStats (message, replyToChannel, user) {
+
+		replyToChannel.send('This command is currently disabled.')
+		/*
+		disabling for now, puts out too much information, we suspect the bot is getting kicked for flooding.
+
 		_.each(bot.channelList, (channelName) => {
 			let channel = bot.getChannelByName(channelName);
 			displayStatsForChannel(channel, replyToChannel);
 		});
 		displayRunningTime(message, replyToChannel);
+		*/
 	}
 
 	function showUserStats (message, channel, user) {
