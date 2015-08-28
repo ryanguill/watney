@@ -153,8 +153,8 @@
 					return;
 				}
 
-				if (_.isUndefined(plugin.transpile)) {
-					plugin.transpile = true;
+				if (_.isUndefined(plugin.preprocess)) {
+					plugin.preprocess = 'babel';
 				}
 
 				if (_.isUndefined(plugin.disabled) || !_.isBoolean(plugin.disabled)) {
@@ -191,14 +191,14 @@
 				ensureExists(plugin.binDir, function (err) {
 					if (err) throw(err);
 
-					if (plugin.transpile) {
+					if (plugin.preprocess === 'babel') {
 						babel.transformFile(plugin.path, {}, function (err, result) {
 							if (err) throw(err);
 
 							fs.writeFile(plugin.binPath, result.code, {}, function (err) {
 								if (err) throw(err);
 
-								console.log('Loaded', {id: plugin.id, transpile: plugin.transpile});
+								console.log('Loaded', {id: plugin.id, preprocess: plugin.preprocess});
 								bot.use(require(plugin.binPath), plugin);
 								loadPluginsInOrder(_.rest(plugins), finalCallback);
 							});
@@ -212,7 +212,7 @@
 						copyFile(plugin.path, plugin.binPath, function (err, result) {
 							if (err) throw(err);
 
-							console.log('Loaded', {id: plugin.id, transpile: plugin.transpile});
+							console.log('Loaded', {id: plugin.id, preprocess: plugin.preprocess});
 							bot.use(require(plugin.binPath), plugin);
 							loadPluginsInOrder(_.rest(plugins), finalCallback);
 						});

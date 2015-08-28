@@ -42,7 +42,7 @@
       "id": "echo",
       "path": "plugins/echo.js",
       "disabled": false,
-      "transpile": false
+      "preprocess": "none"
     },
     {
       "id": "isup",
