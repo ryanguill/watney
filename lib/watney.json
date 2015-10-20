@@ -16,7 +16,8 @@
     {
       "id": "history",
       "path": "plugins/history.js",
-      "maxHistoryPerChannel": 15000
+      "maxHistoryPerChannel": 15000,
+      "ignoredChannels": ["admins"]
     },
     {
       "id": "karma",
@@ -55,6 +56,11 @@
     {
       "id": "raffle",
       "path": "plugins/raffle.js"
+    },
+    {
+      "id": "admin-notify",
+      "path": "plugins/admin-notify.js",
+      "adminChannel": "admins"
     }
   ]
 }

@@ -9,6 +9,7 @@ module.exports = (function(){
 	let config;
 	let redis;
 	let maxHistoryPerChannel;
+	let ignoredChannels = [];
 
 	function createGist (channel, data, callback) {
 
@@ -56,6 +57,10 @@ module.exports = (function(){
 	function logMessage (message, channel, user) {
 		message.parts = message.parts || [];
 
+		if (_.contains(ignoredChannels, channel.name) ) {
+			return;
+		}
+
 		let text = message.parts.map(part => {
 			if (part.indexOf('<@U') !== -1) {
 				let user = bot.getUserForMention(part);
@@ -77,6 +82,11 @@ module.exports = (function(){
 	}
 
 	function getTailForChannel (channelName, lines, callback) {
+
+		if (_.contains(ignoredChannels, channelName) ) {
+			return;
+		}
+
 		lines = lines - 1;
 		if (lines < 0) lines = 0;
 		redis.lrange('channel_log.' + channelName.toLowerCase(), 0, lines, callback);
@@ -207,7 +217,9 @@ module.exports = (function(){
 		redis = bot.redis;
 
 		maxHistoryPerChannel = config.maxHistoryPerChannel || 1000;
-		console.log(config, maxHistoryPerChannel);
+		ignoredChannels = config.ignoredChannels || [];
+
+		console.log(config, maxHistoryPerChannel, ignoredChannels);
 
 		bot.logMessage = logMessage;
 
