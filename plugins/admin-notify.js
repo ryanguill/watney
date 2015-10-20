@@ -16,7 +16,8 @@ module.exports = (function(){
 		const targetChannel = bot.getChannelGroupOrDMByName(adminChannel);
 
 		if (!_.isUndefined(targetChannel)) {
-			return targetChannel.send(msg);
+			targetChannel.send(msg);
+			channel.send('Your message has been sent successfully.  An admin should respond to you shortly.');
 		} else {
 			console.log('Invalid admin channel!', adminChannel);
 			return channel.send('sorry, I haven`t been configured properly to do that! Notify the owner of the group that ' +

@@ -92,3 +92,7 @@ Send a direct message to the bot's account to get a ticket to the raffle.
 ### !raffle -listTickets
 
 See which members have tickets and how many.
+
+### !admin {message}
+
+Send a message to an admin group. You can use this command (like almost all commands) in a direct message if you want to be discreet. You will either get a notification that your message was sent, or a notification that the admin group has not been configured properly.
