@@ -195,13 +195,54 @@ module.exports = (function(){
 			return channel.send(bot.makeMention(slackUser) + ' is banned from receiving karma.');
 		}
 
-		let userKarma = getLeaderboard().find(o => o.handle === slackUser.name);
+		let leaderboardPos = getLeaderboard().find(o => o.handle === slackUser.name);
 
-		if (_.isUndefined(userKarma)) {
+		if (_.isUndefined(leaderboardPos)) {
 			return channel.send(bot.makeMention(slackUser) + ' doesn`t have any karma yet!');
 		}
 
-		channel.send(bot.makeMention(slackUser) + ' has ' + userKarma.value + ' karma. #' + userKarma.place + ' overall.');
+		let givers = _.countBy(_.pluck(_.where(karma, {'receiver': slackUser.name}), 'giver'));
+		givers = _.sortBy(_.map(givers, (value, giver) => {return {giver: giver, amount: value};}), 'amount').reverse();
+
+		let giverUniqueScores = _.uniq(_.pluck(givers, 'amount'));
+
+		let giverLeaderBoard = givers.map((o, index) => {
+			o.handle = o.giver;
+			o.valueStr = o.amount.toString();
+			o.place = giverUniqueScores.findIndex(x => x === o.amount) + 1;
+			return o;
+		});
+
+		let giversBoard = calculateLeaderboard(giverLeaderBoard.slice(0, 10));
+
+
+		let receivers = _.countBy(_.pluck(_.where(karma, {'giver': slackUser.name}), 'receiver'));
+
+		receivers = _.sortBy(_.map(receivers, (value, receiver) => {return {receiver: receiver, amount: value};}), 'amount').reverse();
+
+		let receiverUniqueScores = _.uniq(_.pluck(receivers, 'amount'));
+
+		let receiverLeaderBoard = receivers.map((o, index) => {
+			o.handle = o.receiver;
+			o.valueStr = o.amount.toString();
+			o.place = receiverUniqueScores.findIndex(x => x === o.amount) + 1;
+			return o;
+		});
+
+		let receiversBoard = calculateLeaderboard(receiverLeaderBoard.slice(0, 10));
+
+		if (giverLeaderBoard.length === 0) {
+			giversBoard = '';
+		}
+
+		if (receiverLeaderBoard.length === 0) {
+			receiversBoard = '';
+		}
+
+		channel.send(bot.makeMention(slackUser) + ' has ' + leaderboardPos.value + ' karma. #' + leaderboardPos.place +
+				' overall.\n' +
+				'```Users giving karma to ' + slackUser.name + ' are:' + giversBoard + '```\n' +
+				'```Users receiving karma from ' + slackUser.name + ' are:' + receiversBoard + '```\n');
 	}
 
 	function displayUserKarmaGiving (message, channel, user) {
