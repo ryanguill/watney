@@ -266,3 +266,5 @@ Here are some other documentation points I hope to expand on in the future, but 
 - `bot.getChannelGroupOrDMByID(input)` takes an id and gives you the channel object -
 - `bot.getUserByID(id)` takes a user id, gives a user object
 - `bot.getUserByName(name)` takes the username string, gives a user object
+
+You can also listen for a `joined` event to know when the `bot` client is ready - you cannot call any of the above methods until then. Example: `bot.on('joined', functionToCall)`

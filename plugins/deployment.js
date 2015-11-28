@@ -5,7 +5,9 @@ const exec = require('child_process').exec;
 module.exports = (function(){
 
 	let bot;
+	let redis;
 	let child;
+	let restartTimestampKey;
 
 	function killSelf (message, channel, user) {
 
@@ -27,6 +29,7 @@ module.exports = (function(){
 			if (err) return channel.send('error! ' + err);
 			if (data === 0) return channel.send('http://i.imgur.com/4C7iu09.gif');
 			channel.send('restarting...');
+			redis.set(restartTimestampKey, JSON.stringify({ts: _.now(), channelName: channel.name}));
 			setTimeout(() => process.exit(1), 2000);
 		});
 
@@ -62,8 +65,26 @@ module.exports = (function(){
 		});
 	}
 
+	function checkRestart () {
+		redis.get(restartTimestampKey, (err, data) => {
+			if (err) throw(err);
+			if (data !== null) {
+				let {ts, channelName} = JSON.parse(data);
+				let diff = _.now() - ts;
+				let channel = bot.getChannelGroupOrDMByName(channelName);
+				channel.send('And we`re back! restart time: ' + (diff / 1000) + ' seconds');
+			}
+			redis.del(restartTimestampKey);
+		});
+	}
+
 	return function init(_bot) {
 		bot = _bot;
+		redis = bot.redis;
+
+		restartTimestampKey = bot.botName + '.restart_ts';
+
+		bot.on('joined', checkRestart);
 
 		bot.register({
 			pattern: {command: '!restart'},

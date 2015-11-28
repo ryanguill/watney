@@ -130,6 +130,8 @@
 				console.log('As well as: ' + b.groupList.join(', '));
 			}
 
+			bot.emit('joined');
+
 		});
 
 
