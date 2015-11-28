@@ -53,11 +53,9 @@ module.exports = (function(){
 						'consider using a service to host that data and then provide a link instead. ' +
 						'https://gist.github.com/ and http://pastebin.com/ are the most popular options. ' +
 						'I have copied your post into an anonymous gist here so that you won`t lose any work: ' +
-						gistURL + ' - you can share that link in ' + bot.makeChannelMention(channel) +
-						' if that works for you.\n' +
+						gistURL + ' - Consider removing your message and sharing that link in ' +
+						bot.makeChannelMention(channel) +' instead.\n' +
 						'_Please let an admin know if you think you received this message in error_');
-
-				message.deleteMessage.call(message);
 			});
 
 		}
