@@ -113,8 +113,8 @@ module.exports = (function(){
 
 		let userKarma = getLeaderboard().find(o => o.handle === slackUser.name);
 
-		return channel.send(bot.makeMention(user) + ' gives karma to ' + bot.makeMention(slackUser.name) +
-			'. They now have ' + userKarma.value + ' karma. #' + userKarma.place + ' overall.');
+		return channel.send('`' + bot.makeMention(user) + ' gives karma to ' + bot.makeMention(slackUser.name) +
+			'. They now have ' + userKarma.value + ' karma. #' + userKarma.place + ' overall.`');
 	}
 
 	function addKarmaSucceeding (message, channel, user) {
