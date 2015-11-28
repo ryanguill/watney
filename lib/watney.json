@@ -61,6 +61,11 @@
       "id": "admin-notify",
       "path": "plugins/admin-notify.js",
       "adminChannel": "admins"
+    },
+    {
+      "id": "message-cop",
+      "path": "plugins/message-cop.js",
+      "maxLineBreaksPerMessage": 5
     }
   ]
 }

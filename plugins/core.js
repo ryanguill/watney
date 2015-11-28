@@ -98,6 +98,13 @@ module.exports = (function(){
 			return '<@' + user + '>';
 		};
 
+		bot.makeChannelMention = function(channel) {
+			if (_.isObject(channel) && _.has(channel, 'id')) {
+				channel = channel.id;
+			}
+			return '<#' + channel + '>';
+		};
+
 		bot.getUserForMention = function(input) {
 			input = input.replace('<@','').replace('>','');
 			return bot.getUserByID(input);
