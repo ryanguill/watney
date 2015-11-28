@@ -66,11 +66,11 @@ module.exports = (function(){
 					if (user.name === bot.botName) {
 						time = moment().millisecond(5 * data).fromNow(true);
 						channel.send('Congrats ' + user.name + '! Your ' + data + 'th message was: `' + message.text +
-							'` ~ guessing an average of 5 milliseconds per message, that`s about ' + time + ' spent in IRC!');
+							'` ~ guessing an average of 5 milliseconds per message, that`s about ' + time + ' spent in this channel!');
 					} else {
 						time = moment().seconds(5 * data).fromNow(true);
 						channel.send('Congrats ' + user.name + '! Your ' + data + 'th message was: `' + message.text +
-							'` ~ guessing an average of 5 seconds per message, that`s about ' + time + ' spent in IRC!');
+							'` ~ guessing an average of 5 seconds per message, that`s about ' + time + ' spent in this channel!');
 					}
 				}
 			});
