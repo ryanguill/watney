@@ -213,7 +213,7 @@ module.exports = (function(){
 			return o;
 		});
 
-		let giversBoard = calculateLeaderboard(giverLeaderBoard.slice(0, 10));
+		let giversBoard = calculateLeaderboard(giverLeaderBoard);
 
 
 		let receivers = _.countBy(_.pluck(_.where(karma, {'giver': slackUser.name}), 'receiver'));
@@ -229,7 +229,7 @@ module.exports = (function(){
 			return o;
 		});
 
-		let receiversBoard = calculateLeaderboard(receiverLeaderBoard.slice(0, 10));
+		let receiversBoard = calculateLeaderboard(receiverLeaderBoard);
 
 		if (giverLeaderBoard.length === 0) {
 			giversBoard = '';
