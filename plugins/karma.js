@@ -153,28 +153,37 @@ module.exports = (function(){
 	function displayLeaderboard (message, channel, user) {
 		let leaderboard = getLeaderboard();
 		let board = calculateLeaderboard( leaderboard );
-		channel.send( `ƙarma leaderboard:\`\`\`${board}\nTotal karma holders: ${leaderboard.length}\`\`\`` );
+		channel.send( `ƙarma leaderboard:\`\`\`${board}\`\`\`` );
 	}
 
 	function displayGiverLeaderboard (message, channel, user) {
 		let leaderboard = getGiverLeaderboard();
 		let board = calculateLeaderboard( leaderboard );
-		channel.send( `ƙarma-givers leaderboard:\`\`\`${board}\nTotal karma givers: ${leaderboard.length}\`\`\`` );
+		channel.send( `ƙarma-givers leaderboard:\`\`\`${board}\`\`\`` );
 	}
 
 	function calculateLeaderboard(data){
 		let top10 = data.reduce((agg, o) => {
-			agg[ o.place ] = agg[ o.place ] || []; //I think there is a _. method to make this cleaner, defaults or something, I need to look it up
+			//I think there is a _. method to make this cleaner, defaults or something, I need to look it up
+			agg[ o.place ] = agg[ o.place ] || [];
 			agg[ o.place ].push( o );
 			return agg;
 		}, {});
 
 		let board = '';
+		let sum = 0, totalHandles = 0;
+
 		for (let place of [1,2,3,4,5,6,7,8,9,10]){
 			if (_.has(top10, place)){
-				board += `\n[ #${place} @ ${_.first(top10[ place ]).valueStr}ƙ ]: ${_.pluck(top10[ place ], 'handle').join(', ')}`;
+				let karmaAmount = _.first(top10[ place ]).valueStr;
+				let handles = _.pluck(top10[ place ], 'handle');
+				sum += (karmaAmount * handles.length);
+				totalHandles += handles.length;
+				board += `\n[ #${place} @ ${karmaAmount}ƙ ]: ${handles.join(', ')}`;
 			}
 		}
+
+		board += `\n[ Total: ${sum}ƙ / ${totalHandles} user${totalHandles === 1 ? '' : 's'} ]`;
 
 		return board;
 	}
@@ -218,7 +227,9 @@ module.exports = (function(){
 
 		let receivers = _.countBy(_.pluck(_.where(karma, {'giver': slackUser.name}), 'receiver'));
 
-		receivers = _.sortBy(_.map(receivers, (value, receiver) => {return {receiver: receiver, amount: value};}), 'amount').reverse();
+		receivers = _.sortBy(_.map(receivers, (value, receiver) => {
+			return {receiver: receiver, amount: value};
+		}), 'amount').reverse();
 
 		let receiverUniqueScores = _.uniq(_.pluck(receivers, 'amount'));
 
@@ -239,8 +250,8 @@ module.exports = (function(){
 			receiversBoard = '';
 		}
 
-		channel.send(bot.makeMention(slackUser) + ' has ' + leaderboardPos.value + ' karma. #' + leaderboardPos.place +
-				' overall.\n' +
+		channel.send('`' + bot.makeMention(slackUser) + ' has ' + leaderboardPos.value + ' karma. #' + leaderboardPos.place +
+				' overall.`\n' +
 				'```Users giving karma to ' + slackUser.name + ' are:' + giversBoard + '```\n' +
 				'```Users receiving karma from ' + slackUser.name + ' are:' + receiversBoard + '```\n');
 	}
