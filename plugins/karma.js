@@ -37,7 +37,7 @@ module.exports = (function(){
 
 	function unbanKarma (userName) {
 		karmaBans = karmaBans.filter(o => o.receiver !== userName);
-		persistKarma();
+		persistKarmaBans();
 	}
 
 	function isUserKarmaBanned (userName) {
