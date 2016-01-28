@@ -113,6 +113,12 @@ module.exports = (function() {
 							fitMsg += ' *DISCOURAGED! ' + result.discouraged + '*';
 						}
 
+						if (_.any(result.engines, engine => _.has(engine, 'removed'))) {
+							fitMsg += ' *REMOVED in at least one engine!*';
+						} else if (_.any(result.engines, engine => _.has(engine, 'deprecated'))) {
+							fitMsg += ' *DEPRECATED in at least one engine!*';
+						}
+
 						channel.send(fitMsg);
 					}
 				});
