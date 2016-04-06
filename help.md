@@ -69,6 +69,10 @@ Displays the current karma giving leaderboard.
 
 Lookup CMFL tags or functions, or any term for which a custom description has been provided.
 
+### !lookup -export [md|markdown|text|json]
+
+get a gist of all of the custom descriptions saved.
+
 ### !stats
 
 Display statistics about how many messages have been sent in the current channel and who has participated the most. Also shows how long the bot has been running.

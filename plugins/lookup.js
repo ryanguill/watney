@@ -174,6 +174,80 @@ module.exports = (function() {
 		});
 	}
 
+	function exportLookups (message, channel, user) {
+		let [command, subcommand, format] = message.parts;
+
+		if (_.isUndefined(format)) {
+			return channel.send('You must provide a format: `!lookup -export [md|markdown|text|json]` - only json can be imported.');
+		}
+
+		getCustomDescriptions((err, data) => {
+			console.log(err, data);
+			if (err) {
+				console.error(err);
+				return channel.send('Error! ' + err);
+			}
+
+			if (data === null) {
+				console.log(err, data);
+				return channel.send('data was null...');
+			}
+
+			let filename = bot.botName + '-custom-descriptions.';
+			let output = '';
+			let keys = _.keys(data).sort();
+
+			switch (format) {
+				case 'md' :
+				case 'markdown' :
+					filename += 'md';
+					output = _.map(keys, key => '```' + decodeURI(key) + '``` ' + decodeURI(data[key])).join('\n\n');
+					break;
+				case 'text' :
+					filename += 'text';
+					output = _.map(keys, key => decodeURI(key) + ': ' + decodeURI(data[key])).join('\n');
+					break;
+				case 'json' :
+					filename += 'json';
+					output = JSON.stringify(data);
+					break;
+				default :
+					return channel.send('I don`t understand that export format.  You can export to markdown, text or json');
+					break;
+			}
+
+			createGist(filename, output, function (err, response, body) {
+				if (err) {
+					console.error(err);
+					return channel.send('Error: ' + err);
+				}
+				try {
+					var data = JSON.parse(body);
+					if (_.has(data, 'message') && _.has(data, 'documentation_url')) {
+						return channel.send('error: ' + body);
+					} else {
+						switch (format) {
+							case 'md' :
+							case 'markdown' :
+								return channel.send('Custom descriptions: ' + data.html_url);
+								break;
+							case 'text' :
+								return channel.send('Custom descriptions: ' + data.files[filename].raw_url);
+								break;
+							case 'json' :
+								return channel.send('Custom descriptions: ' + data.files[filename].raw_url);
+								break;
+						}
+					}
+				} catch (e) {
+					console.error(e);
+					return channel.send('error:' + e);
+				}
+
+			});
+		});
+	}
+
 
 	return function init (_bot) {
 		bot = _bot;
@@ -202,9 +276,16 @@ module.exports = (function() {
 			flags: {stop: true}
 		});
 
+		bot.register({
+			pattern: {regex: /^!lookup \-export .+/g},
+			f: exportLookups,
+			type: 'OUT',
+			priority: 1000,
+			flags: {stop: true}
+		});
+
 		//todo:
 		//!lookup -stats
-		//!lookup -export [md|markdown|text|json]
 		//!lookup -resetStats
 		//!lookup foo //get the stats for foo
 
