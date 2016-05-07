@@ -114,7 +114,7 @@ module.exports = (function(){
 			type: 'OUT'});
 
 		bot.register({
-			pattern: {regex: new RegExp('^' + bot.botName + '[\s]*.*\?')},
+			pattern: {regex: new RegExp('^' + bot.botName + '[\s]*.*\?', 'i')},
 			f: give8BallResponse,
 			type: 'OUT'
 		});
