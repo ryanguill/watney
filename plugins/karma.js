@@ -325,7 +325,7 @@ module.exports = (function(){
 		if (!karmaBans.length) return channel.send('Nobody is banned from receiving karma!');
 
 		channel.send('The following users are banned from receiving karma: ' +
-			karmaBans.map(o => bot.makeMention(bot.getUserByName(o.receiver))).join(', '));
+			karmaBans.map(o => bot.getUserByName(o.receiver).name).join(', '));
 	}
 
 	return function init(_bot) {
