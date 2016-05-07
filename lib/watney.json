@@ -63,6 +63,11 @@
       "adminChannel": "admins"
     },
     {
+      "id": "admin-notes",
+      "path": "plugins/admin-notes.js",
+      "adminChannel": "admins"
+    },
+    {
       "id": "message-cop",
       "path": "plugins/message-cop.js",
       "maxLineBreaksPerMessage": 5
