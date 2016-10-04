@@ -95,11 +95,12 @@ module.exports = (function() {
 						const theoreticalMax = 2000; //rough guess at how many characters we get
 						const link = ' // http://cfdocs.org/' + term;
 						let msg = '`';
+						let syntax = result.script || result.syntax;
 
 						if (result.type === 'tag'){
-							msg += result.syntax + ' -- ' + result.description.replace(/\s+/g, ' ') + '`';
+							msg += syntax + ' -- ' + result.description.replace(/\s+/g, ' ') + '`';
 						}else{
-							msg += result.syntax + ' -- returns ' + (result.returns.length ? result.returns : ' nothing') + '`';
+							msg += syntax + ' -- returns ' + (result.returns.length ? result.returns : ' nothing') + '`';
 						}
 
 						let bufferRemaining = theoreticalMax - ( (bot.botName.length + 1) + link.length);
