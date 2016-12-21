@@ -129,12 +129,12 @@ module.exports = (function(){
 			pattern: {command: '!8ball'},
 			f: give8BallResponse,
 			type: 'OUT'});
-
+/*
 		bot.register({
 			pattern: {command: '!mingo'},
 			f: giveMingoResponse,
 			type: 'OUT'});
-
+*/
 		bot.register({
 			pattern: {regex: new RegExp('^' + bot.botName + '[\s]*.*\?', 'i')},
 			f: give8BallResponse,
