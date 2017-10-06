@@ -268,7 +268,7 @@ module.exports = (function(){
 			return channel.send('I`m not sure who ' + receiverUsername + ' is...');
 		}
 
-		let userKarma = getGiverLeaderboard().find(o => o.giver === slackUser.name);
+		let userKarma = getGiverLeaderboard().find(o => o.handle === slackUser.name);
 
 		if (_.isUndefined(userKarma)) {
 			return channel.send(bot.makeMention(slackUser) + ' hasn`t given any karma yet!');
