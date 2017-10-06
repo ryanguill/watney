@@ -28,6 +28,8 @@ PRs for just documentation is certainly welcome! If you add a new feature, pleas
 
 ## Code
 
+> **Working on your first Pull Request?** You can learn how from this *free* series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github)
+
 Currently development happens on master, but nothing will be committed to master that isn't ready for production.  Large features may be developed in branches.  If it is a major feature you are writing, please consider talking through it in an issue first.  
 
 1. Fork the project
