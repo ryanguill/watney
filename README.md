@@ -1,7 +1,9 @@
 # watney
 @watney, a bot for slack.
 
-Decendent of [zoidbox](https://github.com/atuttle/zoidbox), originally written for the cfml-slack room.
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+
+Descendant of [zoidbox](https://github.com/atuttle/zoidbox), originally written for the cfml-slack room.
 
 Ideally an open slack bot platform, ready for customization for your own slack room, easy to extend with your own functionality. 
 
