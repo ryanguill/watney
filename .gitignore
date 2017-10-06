@@ -4,3 +4,4 @@ node_modules/*
 lib/config.user.json
 lib/watney.user.json
 bin/*
+redis-data/*
