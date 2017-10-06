@@ -16,6 +16,16 @@ Displays an 8-ball response.  You can also get an 8-ball response by starting wi
 
 Displays the most users that the bot has ever seen online at the same time.
 
+### !roll
+
+Roll some dice. 
+
+- `!roll 1d20` rolls one 20-sided die. 
+- `!roll 1d2 2d10 5d20` rolls one 2-sided die (coin flip), two 10-sided die, and five 20-sided die. 
+- `!roll 2d10+5` rolls two 10-sided die and adds 5 to their sum. `-`, `/`, and `*` operators are also allowed; all operate on the sum. The displayed sum includes any modifiers.
+
+Any time you roll more than one of the same type of die, both the individual rolls and their sum is displayed.
+
 ### !tail
 
 Links to a gist of the last 50 messages in the current channel.
