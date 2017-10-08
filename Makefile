@@ -1,8 +1,8 @@
-up:
+up start:
 	docker-compose up -d
 	docker-compose logs -f
 
-down:
+down stop:
 	docker-compose down
 
 restart:
