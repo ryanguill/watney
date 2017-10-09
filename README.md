@@ -19,6 +19,18 @@ For customizing or extending @watney, see [dev-help](https://github.com/ryanguil
 
 Coming soon!
 
+### Starting Watney with Docker/Make
+
+The old school Make cli tool is used to make the syntax of various commands easier to remember and portable. docker-compose is used to orchestrate the two containers. Assuming you have Docker and Make available, here are the commands:
+
+- `make up` - starts watney and redis; creating docker images if this is the first time
+- `make compile` - same as `make up` but with a forced container recompile
+- `make down` - shut down both containers
+- `make logs` - start tailing the logs for both containers
+- `make restart` - restart both containers
+
+The redis container will store its data in an AOF (append-only filesystem) in `./redis-data`.
+
 ### The MIT License (MIT)
 
 Copyright (c) 2015 Ryan Guill, Adam Tuttle

@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+  bot:
+    container_name: watney_bot
+    restart: always
+    build: ./
+    external_links:
+    - redis:redis
+  redis:
+    container_name: watney_redis
+    restart: always
+    image: redis:alpine
+    command: redis-server --appendonly yes
+    volumes:
+    - ./redis-data:/data
