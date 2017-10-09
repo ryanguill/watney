@@ -42,4 +42,10 @@ Clear the current raffle and tickets issued. Be careful, cannot be undone.
 
 Pick a random ticket.  Does not do anything with the tickets, can be used as many times as you need.  Does not exclude previous winners.
 
+### !deploy
 
+This will cause the bot to try and do a `git pull` followed by an `npm install` and then chmod the deploy script for use the next time. See also !restart.
+
+### !restart
+
+Currently what this command really does is exit the process which kills the running program. If you use something like systemd to monitor the process and restart if it fails then it will be immediately restarted.  Something like `nodemon` or possibly `pm2` could do something similar.
