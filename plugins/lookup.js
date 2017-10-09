@@ -146,6 +146,28 @@ module.exports = (function() {
 		});
 	}
 
+	function clearLookup (message, channel, user) {
+		let [term] = message.parts;
+		term = _.rest(term.split('')).join('').toLowerCase();
+
+		bot.log('term', term);
+
+		bot.ops.isOp(user.name, (err, data) => {
+			if (err) return channel.send('error! ' + err);
+			if (data === 0) return channel.send('You must be an op to do that.');
+
+			getDesc(term, (err, result) => {
+				if (result !== null) {
+					clearDesc(term);
+					channel.send('Description cleared for `' + term + '`. It was previously `' + result + '`');
+				} else {
+					channel.send('Sorry, we don`t currently have a description for `' + term + '`');
+				}
+			});
+
+		});
+	}
+
 	function importLookups (message, channel, user) {
 		let [command, subcommand, url] = message.parts;
 		url = _.first(url.replace('<','').replace('>','').split('|'));
@@ -264,6 +286,14 @@ module.exports = (function() {
 		bot.register({
 			pattern: {regex: /^\?.+ \-set .+/g},
 			f: setLookup,
+			type: 'OUT',
+			priority: 999,
+			flags: {stop: true}
+		});
+
+		bot.register({
+			pattern: {regex: /^\?.+ \-clear\s?/g},
+			f: clearLookup,
 			type: 'OUT',
 			priority: 999,
 			flags: {stop: true}
