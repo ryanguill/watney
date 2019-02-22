@@ -31,25 +31,8 @@ module.exports = (function(){
 		return responses[_.random(0, responses.length - 1)].split('{from}').join(from);
 	}
 
-	function randomMingo (from) {
-		let responses = [
-			'_unstable_ - pcmag'
-			, 'There is _No timeline for Mingo`s full release_'
-			, '_small & fast_'
-			, ' wants you to _stahp, pls_'
-			, 'm.i.n.g.o. and mingo was his name-o'
-			, '2min have passed.  it is 12:28.  His name-o was still mingo'
-		];
-
-		return responses[_.random(0, responses.length - 1)].split('{from}').join(from);
-	}
-
 	function give8BallResponse (message, channel, user) {
 		channel.send(random8ball(bot.makeMention(user)));
-	}
-
-	function giveMingoResponse (message, channel, user) {
-		channel.send(randomMingo(bot.makeMention(user)));
 	}
 
 	function give8BallResponseUserCheck (message, channel, user) {
@@ -129,12 +112,7 @@ module.exports = (function(){
 			pattern: {command: '!8ball'},
 			f: give8BallResponse,
 			type: 'OUT'});
-/*
-		bot.register({
-			pattern: {command: '!mingo'},
-			f: giveMingoResponse,
-			type: 'OUT'});
-*/
+
 		bot.register({
 			pattern: {regex: new RegExp('^' + bot.botName + '[\s]*.*\?', 'i')},
 			f: give8BallResponse,
