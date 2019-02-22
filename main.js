@@ -3,7 +3,7 @@
 (function bootstrap() {
 
 	var babel = require('babel-core');
-	require('babel/polyfill');
+	require('@babel/polyfill');
 
 	var _ = require('lodash');
 	var fs = require('fs');
@@ -178,7 +178,7 @@
 				}
 
 				if (plugin.disabled) {
-					return loadPluginsInOrder(_.rest(plugins), finalCallback);
+					return loadPluginsInOrder(_.tail(plugins), finalCallback);
 				}
 
 
@@ -202,7 +202,7 @@
 
 								console.log('Loaded', {id: plugin.id, preprocess: plugin.preprocess});
 								bot.use(require(plugin.binPath), plugin);
-								loadPluginsInOrder(_.rest(plugins), finalCallback);
+								loadPluginsInOrder(_.tail(plugins), finalCallback);
 							});
 							fs.writeFile(plugin.binMapPath, result.map, {}, function (err) {
 								if (err) throw(err);
@@ -216,7 +216,7 @@
 
 							console.log('Loaded', {id: plugin.id, preprocess: plugin.preprocess});
 							bot.use(require(plugin.binPath), plugin);
-							loadPluginsInOrder(_.rest(plugins), finalCallback);
+							loadPluginsInOrder(_.tail(plugins), finalCallback);
 						});
 					}
 				});

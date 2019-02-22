@@ -1,4 +1,4 @@
-FROM node:6.11.4-alpine
+FROM node:10-alpine
 
 # Create app directory
 RUN mkdir -p /usr/src/app
@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 # changed. Faster & less bandwidth used for builds!
 COPY ./package.json /usr/src/app/package.json
 COPY ./package-lock.json /usr/src/app/package-lock.json
-RUN npm install
+RUN npm ci
 
 # We _MUST_ copy the source code into the container so that
 # the node process can start and the container can exist.

@@ -17,6 +17,7 @@ module.exports = (function() {
 					callback(null, r);
 				} catch (e) {
 					callback('Error Parsing JSON for `' + term + '`', null);
+					console.error(e);
 				}
 			} else if ( response.statusCode === 404 ){
 				callback( 'Unable to find docs for `' + term + '`', null );
@@ -83,7 +84,7 @@ module.exports = (function() {
 	}
 
 	function doLookup (message, channel) {
-		let term = _.rest(message.text.split('')).join('').toLowerCase();
+		let term = _.tail(message.text.split('')).join('').toLowerCase();
 		//bot.log('term', term);
 
 		if (term.length === 0) return;
@@ -119,9 +120,9 @@ module.exports = (function() {
 							fitMsg += ' *DISCOURAGED! ' + result.discouraged + '*';
 						}
 
-						if (_.any(result.engines, engine => _.has(engine, 'removed'))) {
+						if (_.some(result.engines, engine => _.has(engine, 'removed'))) {
 							fitMsg += ' *REMOVED in at least one engine!*';
-						} else if (_.any(result.engines, engine => _.has(engine, 'deprecated'))) {
+						} else if (_.some(result.engines, engine => _.has(engine, 'deprecated'))) {
 							fitMsg += ' *DEPRECATED in at least one engine!*';
 						}
 
@@ -134,7 +135,7 @@ module.exports = (function() {
 
 	function setLookup (message, channel, user) {
 		let [term, command, ...desc] = message.parts;
-		term = _.rest(term.split('')).join('').toLowerCase();
+		term = _.tail(term.split('')).join('').toLowerCase();
 		desc = desc.join(' ');
 
 		//clean up description
@@ -153,7 +154,7 @@ module.exports = (function() {
 
 	function clearLookup (message, channel, user) {
 		let [term] = message.parts;
-		term = _.rest(term.split('')).join('').toLowerCase();
+		term = _.tail(term.split('')).join('').toLowerCase();
 
 		bot.log('term', term);
 

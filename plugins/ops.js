@@ -21,7 +21,7 @@ module.exports = (function(){
 	}
 
 	function deOp (user) {
-		if (_.contains(bot.conf.get('ops'), user.toLowerCase())){
+		if (_.includes(bot.conf.get('ops'), user.toLowerCase())){
 			return false;
 		}
 		redis.srem(bot.botName + '.ops', user.toLowerCase());
