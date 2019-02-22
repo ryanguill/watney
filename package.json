@@ -11,7 +11,8 @@
     "npm": "1.1.x"
   },
   "scripts": {
-    "start": "node main.js"
+    "start": "node main.js",
+    "pretty": "prettier --config .prettierrc --write ./plugins/**"
   },
   "dependencies": {
     "async": "^0.9.0",
@@ -27,5 +28,9 @@
     "slack-client": "^1.4.1",
     "valid-url": "^1.0.9",
     "walk": "^2.3.4"
+  },
+  "devDependencies": {
+    "git-hooks": "^1.1.8",
+    "prettier": "1.7.4"
   }
 }
