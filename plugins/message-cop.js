@@ -28,7 +28,11 @@ module.exports = (function(){
 		request({
 			method: 'POST',
 			url: 'https://api.github.com/gists',
-			headers: {'user-agent': 'https://github.com/ryanguill/watney'},
+			headers: {
+			  "user-agent": "https://github.com/ryanguill/watney",
+        Authorization: `token ${bot.conf.get("gist_oauth_token")}`,
+        "content-type": "application/json"
+      },
 			form: JSON.stringify(formData)}, callback);
 	}
 

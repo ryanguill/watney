@@ -9,5 +9,6 @@
   "redis_host": "redis",
   "redis_auth_pass": "",
   "debug": true,
-  "maxHistoryPerChannel": 15000
+  "maxHistoryPerChannel": 15000,
+  "gist_oauth_token": ""
 }
