@@ -232,18 +232,18 @@ module.exports = (function(){
 	}
 
 	function getUniqueTicketMembers () {
-		return _.uniq(_.pluck(tickets, 'user'));
+		return _.uniq(_.map(tickets, 'user'));
 	}
 
 	function getCounts () {
-		let users = _.uniq(_.pluck(tickets, 'user'));
+		let users = _.uniq(_.map(tickets, 'user'));
 
 		let sumByUser = users.map(u => {
 			return {user: u, value: getUserTickets(u).length};
 		});
 
 		sumByUser = _.sortBy(sumByUser, 'value').reverse();
-		let uniqueCounts = _.uniq(_.pluck(sumByUser, 'value'));
+		let uniqueCounts = _.uniq(_.map(sumByUser, 'value'));
 
 		sumByUser = sumByUser.map((o, index) => {
 			o.place = uniqueCounts.findIndex(x => x === o.value) + 1;
@@ -274,7 +274,7 @@ module.exports = (function(){
 		for (let place of [1,2,3,4,5,6,7,8,9,10]){
 			if (_.has(ordered, place)){
 				let value = _.first(ordered[ place ]).value;
-				let usersList = _.pluck(ordered[ place ], 'user').join(', ');
+				let usersList = _.map(ordered[ place ], 'user').join(', ');
 				board += `\n[${value} ticket${value !== 1 ? 's' : ''}]: ${usersList}`;
 			}
 		}

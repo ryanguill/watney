@@ -53,14 +53,14 @@ module.exports = (function(){
 	}
 
 	function getLeaderboard () {
-		let receivers = _.uniq(_.pluck(karma, 'receiver'));
+		let receivers = _.uniq(_.map(karma, 'receiver'));
 		//let sumByReceiver = _.map(_.map(receivers, getUserKarma), karmaList => karmaList.length);
 		let sumByReceiver = receivers.map(r => {
 			return {handle: r, value: getUserKarma(r).length, valueStr: getUserKarma(r).length};
 		});
 
 		sumByReceiver = _.sortBy(sumByReceiver, 'value').reverse();
-		let uniqueScores = _.uniq(_.pluck(sumByReceiver, 'value'));
+		let uniqueScores = _.uniq(_.map(sumByReceiver, 'value'));
 
 		sumByReceiver = sumByReceiver.map((o, index) => {
 			o.place = uniqueScores.findIndex(x => x === o.value) + 1;
@@ -71,14 +71,14 @@ module.exports = (function(){
 	}
 
 	function getGiverLeaderboard () {
-		let givers = _.uniq(_.pluck(karma, 'giver'));
+		let givers = _.uniq(_.map(karma, 'giver'));
 
 		let sumByGiver = givers.map(r => {
 			return {handle: r, value: getUserKarmaGiving(r).length, valueStr: getUserKarmaGiving(r).length};
 		});
 
 		sumByGiver = _.sortBy(sumByGiver, 'value').reverse();
-		let uniqueScores = _.uniq(_.pluck(sumByGiver, 'value'));
+		let uniqueScores = _.uniq(_.map(sumByGiver, 'value'));
 
 		sumByGiver = sumByGiver.map((o, index) => {
 			o.place = uniqueScores.findIndex(x => x === o.value) + 1;
@@ -176,7 +176,7 @@ module.exports = (function(){
 		for (let place of [1,2,3,4,5,6,7,8,9,10]){
 			if (_.has(top10, place)){
 				let karmaAmount = _.first(top10[ place ]).valueStr;
-				let handles = _.pluck(top10[ place ], 'handle');
+				let handles = _.map(top10[ place ], 'handle');
 				sum += (karmaAmount * handles.length);
 				totalHandles += handles.length;
 				board += `\n[ #${place} @ ${karmaAmount}ƙ ]: ${handles.join(', ')}`;
@@ -210,10 +210,10 @@ module.exports = (function(){
 			return channel.send(bot.makeMention(slackUser) + ' doesn`t have any karma yet!');
 		}
 
-		let givers = _.countBy(_.pluck(_.where(karma, {'receiver': slackUser.name}), 'giver'));
+		let givers = _.countBy(_.map(_.filter(karma, {'receiver': slackUser.name}), 'giver'));
 		givers = _.sortBy(_.map(givers, (value, giver) => {return {giver: giver, amount: value};}), 'amount').reverse();
 
-		let giverUniqueScores = _.uniq(_.pluck(givers, 'amount'));
+		let giverUniqueScores = _.uniq(_.map(givers, 'amount'));
 
 		let giverLeaderBoard = givers.map((o, index) => {
 			o.handle = o.giver;
@@ -225,13 +225,13 @@ module.exports = (function(){
 		let giversBoard = calculateLeaderboard(giverLeaderBoard);
 
 
-		let receivers = _.countBy(_.pluck(_.where(karma, {'giver': slackUser.name}), 'receiver'));
+		let receivers = _.countBy(_.map(_.filter(karma, {'giver': slackUser.name}), 'receiver'));
 
 		receivers = _.sortBy(_.map(receivers, (value, receiver) => {
 			return {receiver: receiver, amount: value};
 		}), 'amount').reverse();
 
-		let receiverUniqueScores = _.uniq(_.pluck(receivers, 'amount'));
+		let receiverUniqueScores = _.uniq(_.map(receivers, 'amount'));
 
 		let receiverLeaderBoard = receivers.map((o, index) => {
 			o.handle = o.receiver;

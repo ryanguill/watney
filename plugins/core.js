@@ -44,7 +44,7 @@ module.exports = (function(){
 				return;
 			}
 
-			if (!_.contains(['IN', 'OUT'], params.type)) {
+			if (!_.includes(['IN', 'OUT'], params.type)) {
 				bot.log('Invalid Pattern Registration', 'invalid type: ' + params.type);
 				return;
 			}
@@ -366,7 +366,7 @@ module.exports = (function(){
 			//console.log({text: message.text, type: message.type, user: user.name, messageUser: message.user, channel: channel.name, keys: _.keys(message)});
 
 			//check to make sure we arent ignoring this channel...
-			if (_.contains(bot.ignoreChannels, channel.name)) {
+			if (_.includes(bot.ignoreChannels, channel.name)) {
 				return;
 			}
 

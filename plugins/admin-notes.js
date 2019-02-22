@@ -125,7 +125,7 @@ module.exports = (function(){
 
 		if (_.isUndefined(adminChannel)) {
 			console.log('adminChannel not defined!');
-		} else if (!_.contains(bot.channelList, adminChannel) && !_.contains(bot.groupList, adminChannel)) {
+		} else if (!_.includes(bot.channelList, adminChannel) && !_.includes(bot.groupList, adminChannel)) {
 			console.log('Invalid adminChannel:', adminChannel, 'I am not part of that channel.  ' +
 				'I must be invited to that channel.');
 		}

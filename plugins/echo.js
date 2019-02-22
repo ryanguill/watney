@@ -11,7 +11,7 @@ module.exports = (function () {
 
 	var echo = function echo(message, channel, user) {
 
-		return channel.send(bot.makeMention(user) + ' ' + _.rest(message.parts).join(' '));
+		return channel.send(bot.makeMention(user) + ' ' + _.tail(message.parts).join(' '));
 	};
 
 	var storeLast = function storeLast(message, channel, user) {

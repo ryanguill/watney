@@ -61,7 +61,7 @@ module.exports = (function() {
   function logMessage(message, channel, user) {
     message.parts = message.parts || [];
 
-    if (_.contains(ignoredChannels, channel.name)) {
+    if (_.includes(ignoredChannels, channel.name)) {
       return;
     }
 
@@ -87,7 +87,7 @@ module.exports = (function() {
 
   function getTailForChannel(channelName, lines, callback) {
 
-    if (_.contains(ignoredChannels, channelName)) {
+    if (_.includes(ignoredChannels, channelName)) {
       return;
     }
 
