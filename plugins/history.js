@@ -41,8 +41,6 @@ module.exports = (function() {
 
 		formData.files[filename] = {content: data.reverse().join('\n')};
 
-		console.log(JSON.stringify(formData));
-
 		request({
 			method: 'POST',
 			url: 'https://api.github.com/gists',
