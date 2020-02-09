@@ -1,3 +1,4 @@
+const request = require('request');
 const _ = require('lodash');
 
 module.exports = (function(){
@@ -328,6 +329,108 @@ module.exports = (function(){
 			karmaBans.map(o => bot.getUserByName(o.receiver).name).join(', '));
 	}
 
+
+	function exportKarma (message, channel) {
+
+		let [command, subcommand, format] = message.parts;
+
+		if (_.isUndefined(format)) {
+			return channel.send('You must provide a format: `!karma -export [md|markdown|text|json|sql]`.');
+		}
+
+		let filename = bot.botName + '-karma.';
+		let output = '';
+
+
+		switch (format) {
+			case 'md' :
+			case 'markdown' :
+				filename += 'md';
+				output = _.map(karma, k => `${k.giver} gave karma to ${k.receiver} in #${k.channel} @ ${(new Date(k.ts)).toISOString()}`).join('\n\n');
+				break;
+			case 'text' :
+				filename += 'text';
+				output = _.map(karma, k => `${k.giver} gave karma to ${k.receiver} in #${k.channel} @ ${(new Date(k.ts)).toISOString()}`).join('\n');
+				break;
+			case 'json' :
+				filename += 'json';
+				output = JSON.stringify(karma);
+				break;
+			case 'sql' :
+				filename += 'sql';
+				output = `CREATE TABLE karma (
+	  ts BIGINT NOT NULL PRIMARY KEY
+	, giver TEXT NOT NULL
+	, receiver TEXT NOT NULL
+	, channel TEXT NOT NULL
+);
+
+INSERT INTO karma (ts, giver, receiver, channel) VALUES
+`;
+
+				output += _.map(karma, k=> `(${k.ts}, '${k.giver}', '${k.receiver}', '${k.channel}')`).join('\n,') + '\n;';
+				break;
+			default :
+				return channel.send('I don`t understand that export format.  You can export to markdown, text, sql or json');
+				break;
+		}
+
+		createGist(filename, output, function (err, response, body) {
+			if (err) {
+				console.error(err);
+				return channel.send('Error: ' + err);
+			}
+			try {
+				var data = JSON.parse(body);
+				if (_.has(data, 'message') && _.has(data, 'documentation_url')) {
+					return channel.send('error: ' + body);
+				} else {
+					switch (format) {
+						case 'md' :
+						case 'markdown' :
+							return channel.send('Karma export: ' + data.html_url);
+							break;
+						case 'text' :
+							return channel.send('Karma export: ' + data.files[filename].raw_url);
+							break;
+						case 'json' :
+							return channel.send('Karma export: ' + data.files[filename].raw_url);
+							break;
+						case 'sql' :
+							return channel.send('Karma export: ' + data.files[filename].raw_url);
+							break;
+					}
+				}
+			} catch (e) {
+				console.error(e);
+				return channel.send('error:' + e);
+			}
+
+		});
+
+	}
+
+	function createGist (filename, data, callback) {
+
+		const formData = {
+			description: 'Karma export from ' + bot.botName,
+			public: false,
+			files: {}
+		};
+
+		formData.files[filename] = {content: data};
+
+		request({
+			method: 'POST',
+			url: 'https://api.github.com/gists',
+			headers: {
+			  "user-agent": "https://github.com/ryanguill/watney",
+        Authorization: `token ${bot.conf.get("gist_oauth_token")}`,
+        "Content-Type": "application/json;charset=UTF-8"
+      },
+			form: JSON.stringify(formData)}, callback);
+	}
+
 	return function init(_bot) {
 
 		bot = _bot;
@@ -409,6 +512,14 @@ module.exports = (function(){
 			pattern: {regex: /!karma -bans$/g},
 			f: displayBans,
 			type: 'OUT'});
+
+		bot.register({
+			pattern: {regex: /^!karma \-export .+/g},
+			f: exportKarma,
+			type: 'OUT',
+			priority: 1000,
+			flags: {stop: true}
+		});
 
 	};
 
