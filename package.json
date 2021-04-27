@@ -22,7 +22,7 @@
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "nconf": "^0.10.0",
-    "redis": "^2.8.0",
+    "redis": "^3.1.1",
     "request": "^2.88.0",
     "slack-client": "^1.4.1",
     "valid-url": "^1.0.9"
